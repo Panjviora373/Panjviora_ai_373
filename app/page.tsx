@@ -22,6 +22,7 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [answer, setAnswer] = useState("");
+  const [detailedAnswer, setDetailedAnswer] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -34,7 +35,7 @@ export default function Home() {
     setError("");
     setResults([]);
     setAnswer("");
-
+setDetailedAnswer("");
     try {
       const response = await fetch("/api/search", {
         method: "POST",
@@ -51,7 +52,19 @@ export default function Home() {
       }
 
       setResults(Array.isArray(data.results) ? data.results : []);
-      setAnswer(typeof data.answer === "string" ? data.answer : "");
+     setAnswer(
+  typeof data.quickAnswer === "string"
+    ? data.quickAnswer
+    : typeof data.answer === "string"
+      ? data.answer
+      : ""
+);
+
+setDetailedAnswer(
+  typeof data.detailedAnswer === "string"
+    ? data.detailedAnswer
+    : ""
+);
 
       if (!data.answer && (!data.results || data.results.length === 0)) {
         setError("No results found. Please try another search.");
@@ -118,7 +131,29 @@ export default function Home() {
           Explore knowledge, discover information and find answers
           with your intelligent search companion.
         </p>
+{/* Detailed AI Answer */}
+{detailedAnswer && (
+  <section className="mt-6 w-full rounded-2xl border border-violet-100 bg-white p-6 text-left shadow-sm sm:p-8">
+    <div className="mb-5 flex items-center gap-3">
+      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-100 text-xl text-violet-700">
+        ✨
+      </div>
 
+      <div>
+        <h2 className="font-bold text-slate-900">
+          Detailed AI Answer
+        </h2>
+        <p className="text-xs text-violet-600">
+          Explained by Panjviora AI
+        </p>
+      </div>
+    </div>
+
+    <p className="whitespace-pre-wrap text-sm leading-8 text-slate-600">
+      {detailedAnswer}
+    </p>
+  </section>
+)}
         {/* Search */}
         <form
           onSubmit={search}
