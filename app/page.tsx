@@ -33,7 +33,7 @@ const translations = {
   en: {
     heading: "Search Beyond Limits.",
     description:
-      {translations[language].description}
+{translations[language].description}
     placeholder: "Ask anything or search the web...",
     search: "Search →",
     searching: "Searching...",
