@@ -6,11 +6,18 @@ export async function POST(request: Request) {
     const { query } = await request.json();
 
     if (typeof query !== "string" || !query.trim()) {
-      return NextResponse.json(
-        { error: "Please enter a search query" },
-        { status: 400 }
-      );
-    }
+  return NextResponse.json(
+    { error: "Please enter a search query" },
+    { status: 400 }
+  );
+}
+
+if (query.trim().length > 300) {
+  return NextResponse.json(
+    { error: "Search query is too long. Maximum 300 characters allowed." },
+    { status: 400 }
+  );
+}
 
     const tavilyKey = process.env.TAVILY_API_KEY;
     const geminiKey = process.env.GEMINI_API_KEY;
