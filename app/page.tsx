@@ -7,6 +7,17 @@ type SearchResult = {
   title: string;
   url: string;
   content: string;
+  type SpeechRecognitionLike = {
+  lang: string;
+  interimResults: boolean;
+  maxAlternatives: number;
+  onresult: ((event: {
+    results: ArrayLike<ArrayLike<{ transcript: string }>>;
+  }) => void) | null;
+  onerror: ((event: { error: string }) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+};
 };
 
 const topics = [
@@ -25,7 +36,53 @@ export default function Home() {
   const [detailedAnswer, setDetailedAnswer] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+const [listening, setListening] = useState(false);
+const [voiceError, setVoiceError] = useState("");
+  function startVoiceSearch() {
+  setVoiceError("");
 
+  const speechWindow = window as Window & {
+    SpeechRecognition?: new () => SpeechRecognitionLike;
+    webkitSpeechRecognition?: new () => SpeechRecognitionLike;
+  };
+
+  const SpeechRecognition =
+    speechWindow.SpeechRecognition ||
+    speechWindow.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    setVoiceError("Voice Search is not supported. Please use Google Chrome.");
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+
+  recognition.lang = "en-US";
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    setQuery(transcript);
+  };
+
+  recognition.onerror = (event) => {
+    setVoiceError("Microphone error: " + event.error);
+    setListening(false);
+  };
+
+  recognition.onend = () => {
+    setListening(false);
+  };
+
+  try {
+    setListening(true);
+    recognition.start();
+  } catch {
+    setListening(false);
+    setVoiceError("Please try clicking the microphone again.");
+  }
+}
   async function search(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -168,7 +225,16 @@ setDetailedAnswer(
             className="min-w-0 flex-1 bg-transparent px-2 py-4 text-sm text-slate-800 outline-none placeholder:text-slate-400 sm:text-base"
             required
           />
-
+          <button
+            type="button"
+            onClick={startVoiceSearch}
+            disabled={listening || loading}
+            className="rounded-xl bg-violet-100 px-4 py-3 text-xl text-violet-700 transition hover:bg-violet-200 disabled:opacity-50"
+            aria-label="Voice Search"
+            title="Voice Search"
+          >
+            {listening ? "🔴" : "🎙️"}
+          </button>
           {query && (
             <button
               type="button"
@@ -188,7 +254,11 @@ setDetailedAnswer(
             {loading ? "Searching..." : "Search →"}
           </button>
         </form>
-
+        {voiceError && (
+          <p className="mt-3 text-sm text-red-600">
+            {voiceError}
+          </p>
+        )}
         {/* Search Topics */}
         <div className="mt-8 flex flex-wrap justify-center gap-2">
           {topics.map((topic) => (
