@@ -324,21 +324,26 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#101a35] px-5 py-10 text-center text-white">
-        <div className="text-xl font-extrabold">
-          <span className="text-blue-400">PANJ</span>VIORA
-          <span className="ml-2 text-xs text-violet-300">AI 373</span>
-        </div>
+      
+<footer className="bg-[#101a35] px-5 py-10 text-center text-white">
+  <div className="text-xl font-extrabold">
+    <span className="text-blue-400">PANJ</span>VIORA
+    <span className="ml-2 text-xs text-violet-300">AI 373</span>
+  </div>
 
-        <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-slate-400">
-          Your world of information, powered by intelligent search.
-        </p>
+  <p className="mt-3 text-sm text-slate-400">
+    Your world of information, powered by intelligent search.
+  </p>
 
-        <div className="mt-7 border-t border-white/10 pt-6 text-xs text-slate-500">
-          © 2026 Panjviora AI 373. All rights reserved.
-        </div>
-      </footer>
+  <nav className="mt-7 flex flex-wrap justify-center gap-6 text-sm">
+    <a href="/" className="text-slate-300 hover:text-white">Home</a>
+    <a href="/about" className="text-slate-300 hover:text-white">About Us</a>
+    <a href="/privacy" className="text-slate-300 hover:text-white">Privacy Policy</a>
+    <a href="/contact" className="text-slate-300 hover:text-white">Contact Us</a>
+    <a href="/terms" className="text-slate-300 hover:text-white">Terms & Conditions</a>
+  </nav>
 
-    </main>
-  );
-}
+  <div className="mt-7 border-t border-white/10 pt-6 text-xs text-slate-500">
+    © 2026 Panjviora AI 373. All rights reserved.
+  </div>
+</footer>
