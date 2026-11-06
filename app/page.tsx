@@ -323,8 +323,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Footer */}
       
+{/* Footer */}
 <footer className="bg-[#101a35] px-5 py-10 text-center text-white">
   <div className="text-xl font-extrabold">
     <span className="text-blue-400">PANJ</span>VIORA
