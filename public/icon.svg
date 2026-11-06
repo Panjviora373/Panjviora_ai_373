@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7138e8"/>
+      <stop offset="100%" stop-color="#24105c"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <circle cx="256" cy="225" r="112" fill="none" stroke="#fff" stroke-width="25"/>
+  <path d="M337 306 L405 374" stroke="#fff" stroke-width="30" stroke-linecap="round"/>
+  <path d="M256 145 L275 205 L335 225 L275 245 L256 305 L237 245 L177 225 L237 205 Z" fill="#fff"/>
+  <text x="256" y="448" font-size="43" font-family="Arial" font-weight="bold" text-anchor="middle" fill="#fff">PA 373</text>
+</svg>
