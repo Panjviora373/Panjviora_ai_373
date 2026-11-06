@@ -58,7 +58,7 @@ const [voiceError, setVoiceError] = useState("");
 
   const recognition = new SpeechRecognition();
 
-  recognition.lang = "en-US";
+  recognition.lang = "ur-PK";
   recognition.interimResults = false;
   recognition.maxAlternatives = 1;
 
