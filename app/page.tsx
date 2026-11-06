@@ -29,9 +29,34 @@ const topics = [
   "Business",
   "World News",
 ];
+const translations = {
+  en: {
+    heading: "Search Beyond Limits.",
+    description:
+      {translations[language].description}
+    placeholder: "Ask anything or search the web...",
+    search: "Search →",
+    searching: "Searching...",
+    detailed: "Detailed AI Answer",
+    quick: "Panjviora AI Answer",
+    results: "Search Results",
+  },
+  ur: {
+    heading: "لامحدود تلاش کریں۔",
+    description:
+      "علم دریافت کریں، معلومات تلاش کریں اور اپنے ذہین سرچ ساتھی سے جوابات حاصل کریں۔",
+    placeholder: "اپنا سوال لکھیں یا ویب پر تلاش کریں...",
+    search: "تلاش کریں ←",
+    searching: "تلاش جاری ہے...",
+    detailed: "تفصیلی اے آئی جواب",
+    quick: "پنج ویورا اے آئی جواب",
+    results: "تلاش کے نتائج",
+  },
+};
 
 export default function Home() {
   const [query, setQuery] = useState("");
+  const [language, setLanguage] = useState<"en" | "ur">("en");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [answer, setAnswer] = useState("");
   const [detailedAnswer, setDetailedAnswer] = useState("");
@@ -166,7 +191,35 @@ setDetailedAnswer(
       </header>
 
       {/* Hero */}
-      <section className="mx-auto flex max-w-5xl flex-col items-center px-5 pb-20 pt-20 text-center md:pt-28">
+      <section
+  dir={language === "ur" ? "rtl" : "ltr"}
+  className="mx-auto flex max-w-5xl flex-col items-center px-5 pb-20 pt-20 text-center md:pt-28"
+>
+        <div className="mb-6 flex gap-2">
+  <button
+    type="button"
+    onClick={() => setLanguage("en")}
+    className={`rounded-full px-5 py-2 text-sm font-bold ${
+      language === "en"
+        ? "bg-blue-600 text-white"
+        : "border border-slate-200 bg-white text-slate-600"
+    }`}
+  >
+    English
+  </button>
+
+  <button
+    type="button"
+    onClick={() => setLanguage("ur")}
+    className={`rounded-full px-5 py-2 text-sm font-bold ${
+      language === "ur"
+        ? "bg-blue-600 text-white"
+        : "border border-slate-200 bg-white text-slate-600"
+    }`}
+  >
+    اردو
+  </button>
+</div>
         <div className="mb-7 rounded-full border border-blue-100 bg-white px-5 py-2 text-sm font-medium text-blue-700 shadow-sm">
           ✨ Discover a smarter way to search
         </div>
@@ -182,7 +235,7 @@ setDetailedAnswer(
         </p>
 
         <h2 className="mt-7 text-2xl font-bold text-slate-800 sm:text-3xl">
-          Search Beyond Limits.
+         {translations[language].heading}
         </h2>
 
         <p className="mt-3 max-w-xl text-base leading-7 text-slate-500">
@@ -199,7 +252,7 @@ setDetailedAnswer(
 
       <div>
         <h2 className="font-bold text-slate-900">
-          Detailed AI Answer
+         {translations[language].detailed}
         </h2>
         <p className="text-xs text-violet-600">
           Explained by Panjviora AI
@@ -222,7 +275,7 @@ setDetailedAnswer(
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Ask anything or search the web..."
+            placeholder={translations[language].placeholder}
             className="min-w-0 flex-1 bg-transparent px-2 py-4 text-sm text-slate-800 outline-none placeholder:text-slate-400 sm:text-base"
             required
           />
@@ -252,7 +305,9 @@ setDetailedAnswer(
             disabled={loading || !query.trim()}
             className="rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-5 py-4 text-sm font-bold text-white shadow-md transition hover:scale-[1.02] hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50 sm:px-8"
           >
-            {loading ? "Searching..." : "Search →"}
+            {loading
+  ? translations[language].searching
+  : translations[language].search}
           </button>
         </form>
         {voiceError && (
@@ -303,7 +358,7 @@ setDetailedAnswer(
               </div>
               <div>
                 <h2 className="font-bold text-slate-900">
-                  Panjviora AI Answer
+                  {translations[language].quick}
                 </h2>
                 <p className="text-xs text-blue-600">
                   Intelligent search response
@@ -322,7 +377,7 @@ setDetailedAnswer(
           <section className="mt-12 w-full text-left">
             <div className="mb-6 flex items-center justify-between">
               <h2 className="text-xl font-bold text-slate-900">
-                Search Results
+              {translations[language].results}
               </h2>
               <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">
                 {results.length} Results
