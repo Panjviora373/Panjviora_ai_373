@@ -8,6 +8,7 @@ type SearchResult = {
   url: string;
   content: string;
 };
+
 type SpeechRecognitionLike = {
   lang: string;
   interimResults: boolean;
@@ -18,18 +19,6 @@ type SpeechRecognitionLike = {
   onerror: ((event: { error: string }) => void) | null;
   onend: (() => void) | null;
   start: () => void;
-};
-  type SpeechRecognitionLike = {
-  lang: string;
-  interimResults: boolean;
-  maxAlternatives: number;
-  onresult: ((event: {
-    results: ArrayLike<ArrayLike<{ transcript: string }>>;
-  }) => void) | null;
-  onerror: ((event: { error: string }) => void) | null;
-  onend: (() => void) | null;
-  start: () => void;
-};
 };
 
 const topics = [
