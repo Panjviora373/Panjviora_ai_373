@@ -69,11 +69,9 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-[#f8faff] text-slate-800">
-
       {/* Navigation */}
       <header className="sticky top-0 z-20 border-b border-slate-200/70 bg-white/90 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
-
           <a href="/" className="flex items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-violet-600 text-xl font-black text-white shadow-lg">
               P
@@ -98,7 +96,6 @@ export default function Home() {
 
       {/* Hero */}
       <section className="mx-auto flex max-w-5xl flex-col items-center px-5 pb-20 pt-20 text-center md:pt-28">
-
         <div className="mb-7 rounded-full border border-blue-100 bg-white px-5 py-2 text-sm font-medium text-blue-700 shadow-sm">
           ✨ Discover a smarter way to search
         </div>
@@ -268,7 +265,6 @@ export default function Home() {
             </div>
           </section>
         )}
-
       </section>
 
       {/* Features */}
@@ -323,27 +319,29 @@ export default function Home() {
         </div>
       </section>
 
-      
-{/* Footer */}
-<footer className="bg-[#101a35] px-5 py-10 text-center text-white">
-  <div className="text-xl font-extrabold">
-    <span className="text-blue-400">PANJ</span>VIORA
-    <span className="ml-2 text-xs text-violet-300">AI 373</span>
-  </div>
+      {/* Footer */}
+      <footer className="bg-[#101a35] px-5 py-10 text-center text-white">
+        <div className="text-xl font-extrabold">
+          <span className="text-blue-400">PANJ</span>VIORA
+          <span className="ml-2 text-xs text-violet-300">AI 373</span>
+        </div>
 
-  <p className="mt-3 text-sm text-slate-400">
-    Your world of information, powered by intelligent search.
-  </p>
+        <p className="mt-3 text-sm text-slate-400">
+          Your world of information, powered by intelligent search.
+        </p>
 
-  <nav className="mt-7 flex flex-wrap justify-center gap-6 text-sm">
-    <a href="/" className="text-slate-300 hover:text-white">Home</a>
-    <a href="/about" className="text-slate-300 hover:text-white">About Us</a>
-    <a href="/privacy" className="text-slate-300 hover:text-white">Privacy Policy</a>
-    <a href="/contact" className="text-slate-300 hover:text-white">Contact Us</a>
-    <a href="/terms" className="text-slate-300 hover:text-white">Terms & Conditions</a>
-  </nav>
+        <nav className="mt-7 flex flex-wrap justify-center gap-6 text-sm">
+          <a href="/" className="text-slate-300 hover:text-white">Home</a>
+          <a href="/about" className="text-slate-300 hover:text-white">About Us</a>
+          <a href="/privacy" className="text-slate-300 hover:text-white">Privacy Policy</a>
+          <a href="/contact" className="text-slate-300 hover:text-white">Contact Us</a>
+          <a href="/terms" className="text-slate-300 hover:text-white">Terms & Conditions</a>
+        </nav>
 
-  <div className="mt-7 border-t border-white/10 pt-6 text-xs text-slate-500">
-    © 2026 Panjviora AI 373. All rights reserved.
-  </div>
-</footer>
+        <div className="mt-7 border-t border-white/10 pt-6 text-xs text-slate-500">
+          © 2026 Panjviora AI 373. All rights reserved.
+        </div>
+      </footer>
+    </main>
+  );
+}
