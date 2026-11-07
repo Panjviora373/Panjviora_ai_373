@@ -242,6 +242,12 @@ export default function Home() {
           </a>
 
           <div className="flex items-center gap-2">
+            <a
+  href="/deals"
+  className="rounded-full bg-blue-50 px-4 py-2 text-xs font-bold text-blue-700 transition hover:bg-blue-100"
+>
+  Deals
+</a>
             <button
               type="button"
               onClick={() => setLanguage("en")}
@@ -588,6 +594,12 @@ export default function Home() {
               <a href="/" className="text-slate-300 transition hover:text-white">
                 {t.home}
               </a>
+              <a
+  href="/deals"
+  className="text-slate-300 transition hover:text-white"
+>
+  Deals
+</a>
               <a href="/about" className="text-slate-300 transition hover:text-white">
                 {t.about}
               </a>
