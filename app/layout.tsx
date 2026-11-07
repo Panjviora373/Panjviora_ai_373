@@ -44,6 +44,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
+        <meta name="mitgo-verification" content="5faa6741-a742-4059-9b90-98a3f416b642" />
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2101414354041917"
