@@ -20,10 +20,9 @@ Advertising Details: ${message}`;
 
   const whatsappLink = `https://wa.me/923363465838?text=${encodeURIComponent(contactMessage)}`;
 
-  const emailLink = `mailto:aliqo37311011@gmail.com?subject=${encodeURIComponent(
-    "ALIQO Advertising Request"
-  )}&body=${encodeURIComponent(contactMessage)}`;
-
+  const emailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=aliqo37311011@gmail.com&su=${encodeURIComponent(
+  "ALIQO Advertising Request"
+)}&body=${encodeURIComponent(contactMessage)}`;
   return (
     <main className="min-h-screen bg-slate-950 text-white">
       <section className="mx-auto max-w-6xl px-6 py-16">
