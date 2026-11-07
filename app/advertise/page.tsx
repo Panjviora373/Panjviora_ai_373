@@ -110,10 +110,44 @@ Advertising Details: ${message}`;
 
             <form
               className="mt-6 space-y-4"
-              onSubmit={(e) => {
-                e.preventDefault();
-                window.open(whatsappLink, "_blank");
-              }}
+              onSubmit={async (e) => {
+  e.preventDefault();
+
+  const whatsappWindow = window.open("", "_blank");
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_SUPABASE_URL}/rest/v1/advertising_requests`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          apikey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`,
+          Prefer: "return=minimal",
+        },
+        body: JSON.stringify({
+          business_name: business,
+          contact_name: name,
+          email,
+          phone,
+          advertising_details: message,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Request could not be saved");
+    }
+
+    if (whatsappWindow) {
+      whatsappWindow.location.href = whatsappLink;
+    }
+  } catch (error) {
+    whatsappWindow?.close();
+    alert("Request save nahi hui. Please dobara try karein.");
+  }
+}}
             >
               <input
                 required
