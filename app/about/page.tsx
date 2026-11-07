@@ -4,7 +4,7 @@ export default function AboutPage() {
     <main className="min-h-screen bg-slate-50 px-6 py-16 text-slate-800">
       <div className="mx-auto max-w-3xl rounded-2xl bg-white p-8 shadow-sm">
         <h1 className="text-4xl font-bold text-blue-700">
-          About Panjviora AI
+          About Aliqo
         </h1>
 
         <p className="mt-6 leading-8 text-slate-600">
