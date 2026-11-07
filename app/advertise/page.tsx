@@ -137,7 +137,7 @@ Advertising Details: ${message}`;
     );
 
     if (!response.ok) {
-      throw new Error("Request could not be saved");
+      throw new Error(await response.text());
     }
 
     if (whatsappWindow) {
