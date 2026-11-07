@@ -145,7 +145,7 @@ Advertising Details: ${message}`;
     }
   } catch (error) {
     whatsappWindow?.close();
-    alert("Request save nahi hui. Please dobara try karein.");
+    alert(error instanceof Error ? error.message : String(error));
   }
 }}
             >
