@@ -14,8 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PANJVIORA AI 373 - Search Engine",
-  description: "Search the world with PANJVIORA AI 373.",
+  title: "ALIQO - Search Engine",
+  description: "ALIQO - Discover the world with a smarter search experience.",
+  applicationName: "ALIQO",
   verification: {
     google: "7zfDw38nwUHBoxZTRYLaXApi6kMWQKG8S8EqX7MVmFI",
   },
