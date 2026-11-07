@@ -25,7 +25,7 @@ export default function ContactPage() {
           <h2 className="mb-4 text-2xl font-bold">Send us a message</h2>
 
           <form
-            action="mailto:YOUR_EMAIL@example.com"
+            action="mailto:aliqo37311011@gmail.com"
             method="post"
             encType="text/plain"
             className="space-y-5"
