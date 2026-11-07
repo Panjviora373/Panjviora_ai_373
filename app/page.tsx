@@ -22,27 +22,27 @@ type SpeechRecognitionLike = {
 };
 
 const topics = [
-  "Artificial Intelligence",
   "Technology",
   "Education",
   "Science",
   "Business",
   "World News",
+  "History",
 ];
 
 const translations = {
   en: {
     heading: "Search Beyond Limits.",
     description:
-      "Explore knowledge, discover information and find answers with your intelligent search companion.",
+      "Explore knowledge, discover information and find answers with ALIQO.",
     placeholder: "Ask anything or search the web...",
     search: "Search →",
     searching: "Searching...",
-    detailed: "Detailed AI Answer",
-    quick: "Panjviora AI Answer",
+    detailed: "Detailed Answer",
+    quick: "ALIQO Answer",
     results: "Search Results",
     discover: "✨ Discover a smarter way to search",
-    loading: "Panjviora is searching...",
+    loading: "ALIQO is searching...",
     loadingDescription: "Discovering useful information for you.",
     resultCount: "Results",
     visit: "Visit Website →",
@@ -50,15 +50,15 @@ const translations = {
   ur: {
     heading: "لامحدود تلاش کریں۔",
     description:
-      "علم دریافت کریں، معلومات تلاش کریں اور اپنے ذہین سرچ ساتھی سے جوابات حاصل کریں۔",
+      "علم دریافت کریں، معلومات تلاش کریں اور ALIQO سے جوابات حاصل کریں۔",
     placeholder: "اپنا سوال لکھیں یا ویب پر تلاش کریں...",
     search: "تلاش کریں ←",
     searching: "تلاش جاری ہے...",
-    detailed: "تفصیلی اے آئی جواب",
-    quick: "پنج ویورا اے آئی جواب",
+    detailed: "تفصیلی جواب",
+    quick: "ALIQO کا جواب",
     results: "تلاش کے نتائج",
     discover: "✨ تلاش کا ایک نیا اور بہتر انداز",
-    loading: "پنج ویورا تلاش کر رہا ہے...",
+    loading: "ALIQO تلاش کر رہا ہے...",
     loadingDescription: "آپ کے لیے مفید معلومات تلاش کی جا رہی ہیں۔",
     resultCount: "نتائج",
     visit: "ویب سائٹ دیکھیں ←",
@@ -189,22 +189,17 @@ export default function Home() {
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
           <a href="/" className="flex items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-violet-600 text-xl font-black text-white shadow-lg">
-              P
+              A
             </div>
 
-            <div>
-              <div className="text-lg font-extrabold tracking-tight">
-                <span className="text-blue-600">PANJ</span>
-                <span className="text-slate-900">VIORA</span>
-              </div>
-              <div className="text-[10px] font-bold tracking-[3px] text-violet-600">
-                AI 373
-              </div>
+            <div className="text-lg font-extrabold tracking-tight">
+              <span className="text-blue-600">ALI</span>
+              <span className="text-slate-900">QO</span>
             </div>
           </a>
 
           <span className="rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-xs font-semibold text-blue-700">
-            ✦ AI INTELLIGENCE
+            ✦ SMART SEARCH
           </span>
         </div>
       </header>
@@ -247,13 +242,9 @@ export default function Home() {
 
         <h1 className="text-5xl font-black tracking-tight sm:text-6xl md:text-8xl">
           <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
-            PANJVIORA
+            ALIQO
           </span>
         </h1>
-
-        <p className="mt-5 text-sm font-bold tracking-[5px] text-slate-400 sm:text-base">
-          AI 373
-        </p>
 
         <h2 className="mt-7 text-2xl font-bold text-slate-800 sm:text-3xl">
           {t.heading}
@@ -263,7 +254,7 @@ export default function Home() {
           {t.description}
         </p>
 
-        {/* Detailed AI Answer */}
+        {/* Detailed Answer */}
         {detailedAnswer && (
           <section className="mt-6 w-full rounded-2xl border border-violet-100 bg-white p-6 text-left shadow-sm sm:p-8">
             <div className="mb-5 flex items-center gap-3">
@@ -276,7 +267,7 @@ export default function Home() {
                   {t.detailed}
                 </h2>
                 <p className="text-xs text-violet-600">
-                  Explained by Panjviora AI
+                  Explained by ALIQO
                 </p>
               </div>
             </div>
@@ -373,7 +364,7 @@ export default function Home() {
           </div>
         )}
 
-        {/* AI Answer */}
+        {/* Search Answer */}
         {answer && (
           <section className="mt-12 w-full rounded-2xl border border-blue-100 bg-white p-6 text-left shadow-sm sm:p-8">
             <div className="mb-5 flex items-center gap-3">
@@ -385,7 +376,7 @@ export default function Home() {
                   {t.quick}
                 </h2>
                 <p className="text-xs text-blue-600">
-                  Intelligent search response
+                  ALIQO Search
                 </p>
               </div>
             </div>
@@ -457,7 +448,7 @@ export default function Home() {
         <div className="mx-auto max-w-6xl">
           <div className="mb-10 text-center">
             <h2 className="text-3xl font-extrabold text-slate-900">
-              Explore with Panjviora
+              Explore with ALIQO
             </h2>
             <p className="mt-3 text-slate-500">
               One platform. Endless possibilities.
@@ -468,9 +459,9 @@ export default function Home() {
             {[
               {
                 icon: "✦",
-                title: "AI Intelligence",
+                title: "Smart Answers",
                 description:
-                  "Get helpful answers and explore information with AI.",
+                  "Get helpful answers and explore information.",
               },
               {
                 icon: "⌕",
@@ -506,13 +497,12 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-[#101a35] px-5 py-10 text-center text-white">
-        <div className="text-xl font-extrabold">
-          <span className="text-blue-400">PANJ</span>VIORA
-          <span className="ml-2 text-xs text-violet-300">AI 373</span>
+        <div className="text-xl font-extrabold tracking-wide">
+          ALIQO
         </div>
 
         <p className="mt-3 text-sm text-slate-400">
-          Your world of information, powered by intelligent search.
+          Your world of information, powered by smarter search.
         </p>
 
         <nav className="mt-7 flex flex-wrap justify-center gap-6 text-sm">
@@ -524,7 +514,7 @@ export default function Home() {
         </nav>
 
         <div className="mt-7 border-t border-white/10 pt-6 text-xs text-slate-500">
-          © 2026 Panjviora AI 373. All rights reserved.
+          © 2026 ALIQO. All rights reserved.
         </div>
       </footer>
     </main>
