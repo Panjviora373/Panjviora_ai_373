@@ -8,15 +8,43 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
+const geistMono = Geist({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "ALIQO - Search Engine",
-  description: "ALIQO - Discover the world with a smarter search experience.",
+  title: {
+    default: "ALIQO - Smart Search Engine",
+    template: "%s | ALIQO",
+  },
+  description:
+    "Discover information, explore websites, and find answers with ALIQO, your smarter search experience.",
   applicationName: "ALIQO",
+  keywords: [
+    "ALIQO",
+    "ALIQO Search",
+    "Search Engine",
+    "AI Search",
+    "Web Search",
+    "Online Search",
+  ],
+  authors: [{ name: "ALIQO" }],
+  creator: "ALIQO",
+  publisher: "ALIQO",
+  openGraph: {
+    title: "ALIQO - Smart Search Engine",
+    description:
+      "Discover the world with ALIQO. Search the web and explore information.",
+    siteName: "ALIQO",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "ALIQO - Smart Search Engine",
+    description:
+      "Discover information and explore the web with ALIQO.",
+  },
   verification: {
     google: "7zfDw38nwUHBoxZTRYLaXApi6kMWQKG8S8EqX7MVmFI",
   },
@@ -39,7 +67,10 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+      </body>
     </html>
   );
 }
+
