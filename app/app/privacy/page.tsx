@@ -80,7 +80,7 @@ export default function PrivacyPage() {
       </article>
 
       <footer className="border-t border-white/10 px-6 py-8 text-center text-sm text-slate-400">
-        © {new Date().getFullYear()} ALIQO. All rights reserved.
+        © 2026 ALIQO. All rights reserved.
       </footer>
     </main>
   );
