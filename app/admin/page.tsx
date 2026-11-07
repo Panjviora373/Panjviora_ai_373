@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type Request = {
   id?: number | string;
@@ -11,11 +11,22 @@ type Request = {
   phone?: string;
   advertising_details?: string;
   created_at?: string;
-  status?: "Pending" | "Approved" | "Rejected";
+  status?: string;
 };
+
+type StatusFilter = "All" | "Pending" | "Approved" | "Rejected";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+function normalizeStatus(status?: string) {
+  const value = (status || "Pending").toLowerCase();
+
+  if (value === "approved") return "Approved";
+  if (value === "rejected") return "Rejected";
+
+  return "Pending";
+}
 
 export default function AdminPage() {
   const [email, setEmail] = useState("");
@@ -24,7 +35,11 @@ export default function AdminPage() {
   const [requests, setRequests] = useState<Request[]>([]);
   const [loading, setLoading] = useState(false);
   const [updatingId, setUpdatingId] = useState<string | number | null>(null);
+  const [deletingId, setDeletingId] = useState<string | number | null>(null);
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState<StatusFilter>("All");
+  const [selected, setSelected] = useState<Request | null>(null);
 
   async function loadRequests(accessToken: string) {
     if (!SUPABASE_URL || !SUPABASE_KEY) {
@@ -37,7 +52,7 @@ export default function AdminPage() {
 
     try {
       const response = await fetch(
-        `${SUPABASE_URL}/rest/v1/advertising_requests?select=*`,
+        `${SUPABASE_URL}/rest/v1/advertising_requests?select=*&order=created_at.desc`,
         {
           headers: {
             apikey: SUPABASE_KEY,
@@ -46,12 +61,9 @@ export default function AdminPage() {
         }
       );
 
-      if (!response.ok) {
-        throw new Error(await response.text());
-      }
+      if (!response.ok) throw new Error(await response.text());
 
-      const data = await response.json();
-      setRequests(data);
+      setRequests(await response.json());
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not load requests.");
     } finally {
@@ -113,15 +125,12 @@ export default function AdminPage() {
     item: Request,
     newStatus: "Approved" | "Rejected"
   ) {
-    if (!item.id) {
-      setError("This request has no ID. Please check your database table.");
+    if (item.id == null) {
+      setError("This request has no ID.");
       return;
     }
 
-    if (!SUPABASE_URL || !SUPABASE_KEY || !token) {
-      setError("Supabase connection is not available.");
-      return;
-    }
+    if (!SUPABASE_URL || !SUPABASE_KEY || !token) return;
 
     setUpdatingId(item.id);
     setError("");
@@ -141,14 +150,12 @@ export default function AdminPage() {
         }
       );
 
-      if (!response.ok) {
-        throw new Error(await response.text());
-      }
+      if (!response.ok) throw new Error(await response.text());
 
-      const updatedRows = await response.json();
+      const rows = await response.json();
 
-      if (!updatedRows || updatedRows.length === 0) {
-        throw new Error("No request was updated. Check the admin permissions.");
+      if (!rows || rows.length === 0) {
+        throw new Error("No request was updated. Check admin permissions.");
       }
 
       setRequests((current) =>
@@ -158,10 +165,62 @@ export default function AdminPage() {
             : request
         )
       );
+
+      if (selected?.id === item.id) {
+        setSelected({ ...selected, status: newStatus });
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Status update failed.");
     } finally {
       setUpdatingId(null);
+    }
+  }
+
+  async function deleteRequest(item: Request) {
+    if (item.id == null) {
+      setError("This request has no ID.");
+      return;
+    }
+
+    if (!window.confirm("Are you sure you want to delete this request?")) {
+      return;
+    }
+
+    if (!SUPABASE_URL || !SUPABASE_KEY || !token) return;
+
+    setDeletingId(item.id);
+    setError("");
+
+    try {
+      const response = await fetch(
+        `${SUPABASE_URL}/rest/v1/advertising_requests?id=eq.${encodeURIComponent(String(item.id))}`,
+        {
+          method: "DELETE",
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${token}`,
+            Prefer: "return=representation",
+          },
+        }
+      );
+
+      if (!response.ok) throw new Error(await response.text());
+
+      const deletedRows = await response.json();
+
+      if (!deletedRows || deletedRows.length === 0) {
+        throw new Error("No request was deleted. Check admin permissions.");
+      }
+
+      setRequests((current) =>
+        current.filter((request) => request.id !== item.id)
+      );
+
+      if (selected?.id === item.id) setSelected(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Delete failed.");
+    } finally {
+      setDeletingId(null);
     }
   }
 
@@ -171,56 +230,74 @@ export default function AdminPage() {
     setRequests([]);
     setEmail("");
     setPassword("");
+    setSearch("");
+    setFilter("All");
+    setSelected(null);
     setError("");
   }
 
   function getWhatsAppLink(phone?: string) {
     const digits = (phone || "").replace(/\D/g, "");
-
     if (!digits) return "#";
 
-    const internationalNumber = digits.startsWith("0")
+    const number = digits.startsWith("0")
       ? `92${digits.slice(1)}`
       : digits.startsWith("92")
         ? digits
         : `92${digits}`;
 
-    return `https://wa.me/${internationalNumber}`;
+    return `https://wa.me/${number}`;
   }
 
   function statusStyle(status?: string) {
-    if (status === "Approved") {
-      return "bg-green-900 text-green-300";
-    }
+    const value = normalizeStatus(status);
 
-    if (status === "Rejected") {
-      return "bg-red-900 text-red-300";
-    }
+    if (value === "Approved") return "bg-green-900 text-green-300";
+    if (value === "Rejected") return "bg-red-900 text-red-300";
 
     return "bg-yellow-900 text-yellow-300";
   }
 
   const pendingCount = requests.filter(
-    (item) => !item.status || item.status === "Pending"
+    (item) => normalizeStatus(item.status) === "Pending"
   ).length;
 
   const approvedCount = requests.filter(
-    (item) => item.status === "Approved"
+    (item) => normalizeStatus(item.status) === "Approved"
   ).length;
 
   const rejectedCount = requests.filter(
-    (item) => item.status === "Rejected"
+    (item) => normalizeStatus(item.status) === "Rejected"
   ).length;
 
+  const filteredRequests = useMemo(() => {
+    const query = search.trim().toLowerCase();
+
+    return requests.filter((item) => {
+      const matchesSearch = [
+        item.business_name,
+        item.contact_name,
+        item.email,
+        item.phone,
+        item.advertising_details,
+      ].some((value) => (value || "").toLowerCase().includes(query));
+
+      const matchesStatus =
+        filter === "All" || normalizeStatus(item.status) === filter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [requests, search, filter]);
+
   return (
-    <main className="min-h-screen bg-slate-950 px-5 py-12 text-white">
+    <main className="min-h-screen bg-slate-950 px-4 py-10 text-white sm:px-6">
       <div className="mx-auto max-w-6xl">
         <header className="mb-10 text-center">
           <h1 className="text-4xl font-bold">
             ALIQO <span className="text-blue-400">Admin</span>
           </h1>
           <p className="mt-3 text-slate-400">
-            Advertising Management Dashboard
+            Professional Advertising Management Dashboard
           </p>
         </header>
 
@@ -249,9 +326,7 @@ export default function AdminPage() {
               className="w-full rounded-lg border border-slate-700 bg-slate-800 p-3"
             />
 
-            {error && (
-              <p className="break-words text-sm text-red-400">{error}</p>
-            )}
+            {error && <p className="break-words text-sm text-red-400">{error}</p>}
 
             <button
               type="submit"
@@ -264,25 +339,17 @@ export default function AdminPage() {
         ) : (
           <section>
             <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="rounded-xl border border-slate-700 bg-slate-900 p-5">
-                <p className="text-sm text-slate-400">Total Requests</p>
-                <p className="mt-2 text-3xl font-bold">{requests.length}</p>
-              </div>
-
-              <div className="rounded-xl border border-yellow-800 bg-slate-900 p-5">
-                <p className="text-sm text-yellow-400">Pending</p>
-                <p className="mt-2 text-3xl font-bold">{pendingCount}</p>
-              </div>
-
-              <div className="rounded-xl border border-green-800 bg-slate-900 p-5">
-                <p className="text-sm text-green-400">Approved</p>
-                <p className="mt-2 text-3xl font-bold">{approvedCount}</p>
-              </div>
-
-              <div className="rounded-xl border border-red-800 bg-slate-900 p-5">
-                <p className="text-sm text-red-400">Rejected</p>
-                <p className="mt-2 text-3xl font-bold">{rejectedCount}</p>
-              </div>
+              {[
+                { label: "Total Requests", count: requests.length, style: "border-slate-700 text-white" },
+                { label: "Pending", count: pendingCount, style: "border-yellow-800 text-yellow-400" },
+                { label: "Approved", count: approvedCount, style: "border-green-800 text-green-400" },
+                { label: "Rejected", count: rejectedCount, style: "border-red-800 text-red-400" },
+              ].map((stat) => (
+                <div key={stat.label} className={`rounded-xl border bg-slate-900 p-5 ${stat.style}`}>
+                  <p className="text-sm">{stat.label}</p>
+                  <p className="mt-2 text-3xl font-bold">{stat.count}</p>
+                </div>
+              ))}
             </div>
 
             <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
@@ -294,7 +361,7 @@ export default function AdminPage() {
                   disabled={loading}
                   className="rounded-lg bg-blue-600 px-4 py-2 font-semibold disabled:opacity-50"
                 >
-                  Refresh
+                  {loading ? "Loading..." : "Refresh"}
                 </button>
 
                 <button
@@ -312,16 +379,38 @@ export default function AdminPage() {
               </p>
             )}
 
-            {loading ? (
-              <p className="text-slate-300">Loading requests...</p>
-            ) : requests.length === 0 ? (
+            <div className="mb-6 grid gap-3 sm:grid-cols-2">
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search business, name, email or phone..."
+                className="w-full rounded-lg border border-slate-700 bg-slate-900 p-3 text-white"
+              />
+
+              <select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value as StatusFilter)}
+                className="w-full rounded-lg border border-slate-700 bg-slate-900 p-3 text-white"
+              >
+                <option value="All">All Requests</option>
+                <option value="Pending">Pending</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
+
+            <p className="mb-4 text-sm text-slate-400">
+              Showing {filteredRequests.length} of {requests.length} requests
+            </p>
+
+            {filteredRequests.length === 0 ? (
               <div className="rounded-xl border border-slate-700 bg-slate-900 p-8 text-center text-slate-400">
-                No advertising requests found.
+                No matching advertising requests found.
               </div>
             ) : (
               <div className="space-y-5">
-                {requests.map((item, index) => {
-                  const status = item.status || "Pending";
+                {filteredRequests.map((item, index) => {
+                  const status = normalizeStatus(item.status);
 
                   return (
                     <article
@@ -333,61 +422,48 @@ export default function AdminPage() {
                           {item.business_name || "Business"}
                         </h3>
 
-                        <span
-                          className={`rounded-full px-4 py-2 text-sm font-semibold ${statusStyle(status)}`}
-                        >
+                        <span className={`rounded-full px-4 py-2 text-sm font-semibold ${statusStyle(status)}`}>
                           {status}
                         </span>
                       </div>
 
                       <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                        <p>
-                          <span className="text-slate-400">Contact:</span>{" "}
-                          {item.contact_name || "—"}
-                        </p>
-
-                        <p>
-                          <span className="text-slate-400">Email:</span>{" "}
-                          {item.email || "—"}
-                        </p>
-
-                        <p>
-                          <span className="text-slate-400">Phone:</span>{" "}
-                          {item.phone || "—"}
-                        </p>
+                        <p><span className="text-slate-400">Contact:</span> {item.contact_name || "—"}</p>
+                        <p><span className="text-slate-400">Email:</span> {item.email || "—"}</p>
+                        <p><span className="text-slate-400">Phone:</span> {item.phone || "—"}</p>
                       </div>
 
                       <div className="mt-4 rounded-lg bg-slate-800 p-4">
-                        <p className="mb-2 font-semibold text-slate-300">
-                          Advertising Details
-                        </p>
-                        <p className="whitespace-pre-wrap text-slate-400">
-                          {item.advertising_details || "—"}
-                        </p>
+                        <p className="mb-2 font-semibold text-slate-300">Advertising Details</p>
+                        <p className="whitespace-pre-wrap text-slate-400">{item.advertising_details || "—"}</p>
                       </div>
 
                       {item.created_at && (
                         <p className="mt-4 text-xs text-slate-500">
-                          Submitted:{" "}
-                          {new Date(item.created_at).toLocaleString()}
+                          Submitted: {new Date(item.created_at).toLocaleString()}
                         </p>
                       )}
 
                       <div className="mt-5 flex flex-wrap gap-3">
                         <button
+                          onClick={() => setSelected(item)}
+                          className="rounded-lg bg-blue-700 px-4 py-2 font-semibold hover:bg-blue-800"
+                        >
+                          View Details
+                        </button>
+
+                        <button
                           onClick={() => updateStatus(item, "Approved")}
                           disabled={updatingId === item.id || status === "Approved"}
-                          className="rounded-lg bg-green-600 px-4 py-2 font-semibold hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-40"
+                          className="rounded-lg bg-green-600 px-4 py-2 font-semibold hover:bg-green-700 disabled:opacity-40"
                         >
-                          {updatingId === item.id
-                            ? "Updating..."
-                            : "Approve"}
+                          {updatingId === item.id ? "Updating..." : "Approve"}
                         </button>
 
                         <button
                           onClick={() => updateStatus(item, "Rejected")}
                           disabled={updatingId === item.id || status === "Rejected"}
-                          className="rounded-lg bg-red-600 px-4 py-2 font-semibold hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-40"
+                          className="rounded-lg bg-red-600 px-4 py-2 font-semibold hover:bg-red-700 disabled:opacity-40"
                         >
                           Reject
                         </button>
@@ -400,10 +476,51 @@ export default function AdminPage() {
                         >
                           Contact on WhatsApp
                         </a>
+
+                        <button
+                          onClick={() => deleteRequest(item)}
+                          disabled={deletingId === item.id}
+                          className="rounded-lg border border-red-500 px-4 py-2 font-semibold text-red-400 hover:bg-red-950 disabled:opacity-40"
+                        >
+                          {deletingId === item.id ? "Deleting..." : "Delete"}
+                        </button>
                       </div>
                     </article>
                   );
                 })}
+              </div>
+            )}
+
+            {selected && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+                <div className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-slate-700 bg-slate-900 p-6">
+                  <div className="mb-5 flex items-center justify-between gap-3">
+                    <h2 className="text-xl font-bold">Request Details</h2>
+                    <button
+                      onClick={() => setSelected(null)}
+                      className="rounded-lg bg-slate-700 px-3 py-2"
+                    >
+                      Close
+                    </button>
+                  </div>
+
+                  <div className="space-y-4 text-sm">
+                    <p><strong>Business:</strong> {selected.business_name || "—"}</p>
+                    <p><strong>Contact:</strong> {selected.contact_name || "—"}</p>
+                    <p><strong>Email:</strong> {selected.email || "—"}</p>
+                    <p><strong>Phone:</strong> {selected.phone || "—"}</p>
+                    <p><strong>Status:</strong> {normalizeStatus(selected.status)}</p>
+                    <div>
+                      <strong>Advertising Details:</strong>
+                      <p className="mt-2 whitespace-pre-wrap text-slate-300">
+                        {selected.advertising_details || "—"}
+                      </p>
+                    </div>
+                    {selected.created_at && (
+                      <p><strong>Submitted:</strong> {new Date(selected.created_at).toLocaleString()}</p>
+                    )}
+                  </div>
+                </div>
               </div>
             )}
           </section>
