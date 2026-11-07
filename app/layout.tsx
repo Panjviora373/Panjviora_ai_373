@@ -14,13 +14,9 @@ const geistMono = Geist({
 });
 
 export const metadata: Metadata = {
-  title: {
-  default: "ALIQO",
-  template: "%s | ALIQO",
-},
-  },
+  title: "ALIQO",
   description:
-    "Discover information, explore websites, and find answers with ALIQO, your smarter search experience.",
+    "ALIQO is your smart search engine. Discover websites, explore information, and find useful answers.",
   applicationName: "ALIQO",
   keywords: [
     "ALIQO",
@@ -28,24 +24,10 @@ export const metadata: Metadata = {
     "Search Engine",
     "AI Search",
     "Web Search",
-    "Online Search",
   ],
   authors: [{ name: "ALIQO" }],
   creator: "ALIQO",
   publisher: "ALIQO",
-  openGraph: {
-    title: "ALIQO - Smart Search Engine",
-    description:
-      "Discover the world with ALIQO. Search the web and explore information.",
-    siteName: "ALIQO",
-    type: "website",
-  },
-  twitter: {
-    card: "summary",
-    title: "ALIQO - Smart Search Engine",
-    description:
-      "Discover information and explore the web with ALIQO.",
-  },
   verification: {
     google: "7zfDw38nwUHBoxZTRYLaXApi6kMWQKG8S8EqX7MVmFI",
   },
@@ -74,4 +56,3 @@ export default function RootLayout({
     </html>
   );
 }
-
