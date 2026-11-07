@@ -1,35 +1,63 @@
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-slate-50 px-6 py-16 text-slate-800">
-      <div className="mx-auto max-w-3xl rounded-2xl bg-white p-8 shadow-sm">
-        <h1 className="text-4xl font-bold text-blue-700">
-          Contact Us
-        </h1>
-
-        <p className="mt-6 leading-8 text-slate-600">
-          Thank you for visiting Panjviora AI Search 373.
-          We welcome your questions, suggestions and feedback.
-        </p>
-
-        <h2 className="mt-8 text-2xl font-bold">Get in Touch</h2>
-
-        <p className="mt-3 leading-8 text-slate-600">
-          For support, business inquiries or general questions,
-          please contact the Panjviora website administrator.
-        </p>
-
-        <h2 className="mt-8 text-2xl font-bold">Your Feedback Matters</h2>
-
-        <p className="mt-3 leading-8 text-slate-600">
-          Your feedback helps us improve our search experience
-          and provide more useful services.
-        </p>
-
-        <a href="/" className="mt-10 inline-block font-semibold text-blue-600">
-          ← Back to Home
+    <main className="min-h-screen bg-slate-950 text-white">
+      <nav className="border-b border-white/10 px-6 py-5">
+        <a href="/" className="text-2xl font-bold text-blue-400">
+          ALIQO
         </a>
-      </div>
+      </nav>
+
+      <article className="mx-auto max-w-3xl px-6 py-20">
+        <p className="mb-3 font-semibold tracking-widest text-blue-400">
+          WE ARE HERE TO HELP
+        </p>
+
+        <h1 className="mb-6 text-4xl font-bold">Contact Us</h1>
+
+        <p className="mb-10 leading-8 text-slate-300">
+          Thank you for visiting ALIQO. We welcome your questions,
+          suggestions, feedback, and business inquiries.
+        </p>
+
+        <section className="mb-8 rounded-2xl border border-white/10 bg-white/5 p-8">
+          <h2 className="mb-3 text-2xl font-bold">Get in Touch</h2>
+
+          <p className="mb-5 leading-7 text-slate-300">
+            For support, business inquiries, or general questions,
+            contact our team by email.
+          </p>
+
+          <a
+            href="mailto:aliqo37311011@gmail.com"
+            className="font-semibold text-blue-400 hover:text-blue-300"
+          >
+            aliqo37311011@gmail.com
+          </a>
+        </section>
+
+        <section className="mb-10">
+          <h2 className="mb-3 text-2xl font-bold">
+            Your Feedback Matters
+          </h2>
+
+          <p className="leading-8 text-slate-300">
+            Your feedback helps us improve ALIQO and make the search
+            experience more useful and accessible.
+          </p>
+        </section>
+
+        <a
+          href="/"
+          className="inline-block rounded-full bg-blue-600 px-8 py-3 font-semibold hover:bg-blue-500"
+        >
+          Back to Home
+        </a>
+      </article>
+
+      <footer className="border-t border-white/10 px-6 py-8 text-center text-sm text-slate-400">
+        © 2026 ALIQO. All rights reserved.
+      </footer>
     </main>
   );
 }
