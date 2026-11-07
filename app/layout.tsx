@@ -15,8 +15,9 @@ const geistMono = Geist({
 
 export const metadata: Metadata = {
   title: {
-    default: "ALIQO - Smart Search Engine",
-    template: "%s | ALIQO",
+  default: "ALIQO",
+  template: "%s | ALIQO",
+},
   },
   description:
     "Discover information, explore websites, and find answers with ALIQO, your smarter search experience.",
