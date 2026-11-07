@@ -8,7 +8,7 @@ export default function AboutPage() {
         </h1>
 
         <p className="mt-6 leading-8 text-slate-600">
-          Panjviora AI Search 373 is an independent search platform
+          Aliqo is an independent search platform
           designed to help people discover information and explore
           knowledge through AI-powered search.
         </p>
