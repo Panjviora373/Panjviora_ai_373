@@ -7,89 +7,48 @@ export default function ContactPage() {
         </a>
       </nav>
 
-      <section className="mx-auto max-w-3xl px-6 py-20">
+      <article className="mx-auto max-w-3xl px-6 py-20">
         <p className="mb-3 font-semibold tracking-widest text-blue-400">
-          GET IN TOUCH
+          WE ARE HERE TO HELP
         </p>
 
-        <h1 className="mb-6 text-4xl font-bold md:text-5xl">
-          Contact Us
-        </h1>
+        <h1 className="mb-6 text-4xl font-bold">Contact Us</h1>
 
-        <p className="mb-10 text-lg leading-8 text-slate-300">
-          Have a question, suggestion, or feedback about ALIQO?
-          We would be happy to hear from you.
+        <p className="mb-10 leading-8 text-slate-300">
+          Thank you for visiting ALIQO. We welcome your questions,
+          suggestions, feedback, and business inquiries.
         </p>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-8">
-          <h2 className="mb-4 text-2xl font-bold">Send us a message</h2>
+        <section className="mb-8 rounded-2xl border border-white/10 bg-white/5 p-8">
+          <h2 className="mb-3 text-2xl font-bold">Get in Touch</h2>
+          <p className="mb-5 leading-7 text-slate-300">
+            For support, business inquiries, or general questions,
+            contact our team by email.
+          </p>
 
-          <form
-            action="mailto:aliqo37311011@gmail.com"
-            method="post"
-            encType="text/plain"
-            className="space-y-5"
+          <a
+            href="mailto:aliqo37311011@gmail.com"
+            className="font-semibold text-blue-400 hover:text-blue-300"
           >
-            <div>
-              <label className="mb-2 block text-sm text-slate-300">
-                Your Name
-              </label>
-              <input
-                type="text"
-                name="name"
-                required
-                placeholder="Enter your name"
-                className="w-full rounded-xl border border-white/10 bg-slate-900 p-4 text-white outline-none focus:border-blue-500"
-              />
-            </div>
+            aliqo37311011@gmail.com
+          </a>
+        </section>
 
-            <div>
-              <label className="mb-2 block text-sm text-slate-300">
-                Your Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                required
-                placeholder="Enter your email"
-                className="w-full rounded-xl border border-white/10 bg-slate-900 p-4 text-white outline-none focus:border-blue-500"
-              />
-            </div>
-
-            <div>
-              <label className="mb-2 block text-sm text-slate-300">
-                Message
-              </label>
-              <textarea
-                name="message"
-                required
-                rows={5}
-                placeholder="Write your message..."
-                className="w-full rounded-xl border border-white/10 bg-slate-900 p-4 text-white outline-none focus:border-blue-500"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="rounded-full bg-blue-600 px-8 py-3 font-semibold hover:bg-blue-500"
-            >
-              Send Message
-            </button>
-          </form>
-        </div>
-
-        <p className="mt-6 text-sm text-slate-400">
-          Please replace YOUR_EMAIL@example.com with your real support email
-          before publishing this page.
-        </p>
+        <section className="mb-10">
+          <h2 className="mb-3 text-2xl font-bold">Your Feedback Matters</h2>
+          <p className="leading-8 text-slate-300">
+            Your feedback helps us improve ALIQO and make the search
+            experience more useful and accessible.
+          </p>
+        </section>
 
         <a
           href="/"
-          className="mt-8 inline-block text-blue-400 hover:text-blue-300"
+          className="inline-block rounded-full bg-blue-600 px-8 py-3 font-semibold hover:bg-blue-500"
         >
-          ← Back to Home
+          Back to Home
         </a>
-      </section>
+      </article>
 
       <footer className="border-t border-white/10 px-6 py-8 text-center text-sm text-slate-400">
         © 2026 ALIQO. All rights reserved.
