@@ -827,6 +827,12 @@ export default function Home() {
               </a>
               <a href="/deals" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
                 Deals
+                <a
+  href="/advertise"
+  className="text-[#C4D0C5] transition hover:text-[#E4C35D]"
+>
+  Advertise With Us
+</a>
               </a>
               <a href="/about" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
                 {t.about}
