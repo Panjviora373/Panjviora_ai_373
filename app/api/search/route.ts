@@ -3,24 +3,34 @@ import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
   try {
-    const { query } = await request.json();
+    const body = await request.json();
+    const query = body.query;
+    const mode = body.mode || "web";
 
     if (typeof query !== "string" || !query.trim()) {
-  return NextResponse.json(
-    { error: "Please enter a search query" },
-    { status: 400 }
-  );
-}
+      return NextResponse.json(
+        { error: "Please enter a search query" },
+        { status: 400 }
+      );
+    }
 
-if (query.trim().length > 300) {
-  return NextResponse.json(
-    { error: "Search query is too long. Maximum 300 characters allowed." },
-    { status: 400 }
-  );
-}
+    if (query.trim().length > 300) {
+      return NextResponse.json(
+        { error: "Search query is too long. Maximum 300 characters allowed." },
+        { status: 400 }
+      );
+    }
+
+    if (!["web", "images", "videos"].includes(mode)) {
+      return NextResponse.json(
+        { error: "Invalid search mode" },
+        { status: 400 }
+      );
+    }
 
     const tavilyKey = process.env.TAVILY_API_KEY;
     const geminiKey = process.env.GEMINI_API_KEY;
+    const youtubeKey = process.env.YOUTUBE_API_KEY;
 
     if (!tavilyKey) {
       return NextResponse.json(
@@ -29,7 +39,12 @@ if (query.trim().length > 300) {
       );
     }
 
-    // Step 1: Search with Tavily (12-second limit)
+    // Step 1: Search the web with Tavily
+    const tavilyQuery =
+      mode === "videos"
+        ? `videos ${query.trim()}`
+        : query.trim();
+
     const searchResponse = await fetch(
       "https://api.tavily.com/search",
       {
@@ -39,10 +54,11 @@ if (query.trim().length > 300) {
         },
         body: JSON.stringify({
           api_key: tavilyKey,
-          query: query.trim(),
+          query: tavilyQuery,
           search_depth: "basic",
           max_results: 8,
           include_answer: true,
+          include_images: mode === "images",
         }),
         signal: AbortSignal.timeout(12000),
       }
@@ -70,15 +86,98 @@ if (query.trim().length > 300) {
 
     let detailedAnswer = "";
 
-    // Step 2: Generate AI answers with Gemini
-    if (geminiKey && results.length > 0) {
+    // Step 2: Prepare image results
+    const images = Array.isArray(searchData.images)
+      ? searchData.images.map((image: any) => ({
+          url: image.url || "",
+          description: image.description || "Search image",
+        })).filter((image: any) => image.url)
+      : [];
+
+    // Step 3: Prepare video results
+    let videos: any[] = [];
+
+    if (mode === "videos") {
+      // Videos from other websites
+      const websiteVideos = results.map((item: any) => ({
+        title: item.title || "Video result",
+        url: item.url || "",
+        description: item.content || "",
+        thumbnail: "",
+        source: "Other website",
+        kind: "web-page",
+      })).filter((item: any) => item.url);
+
+      videos = [...websiteVideos];
+
+      // YouTube public video search
+      if (youtubeKey) {
+        try {
+          const youtubeUrl = new URL(
+            "https://www.googleapis.com/youtube/v3/search"
+          );
+
+          youtubeUrl.searchParams.set("part", "snippet");
+          youtubeUrl.searchParams.set("type", "video");
+          youtubeUrl.searchParams.set("maxResults", "12");
+          youtubeUrl.searchParams.set("q", query.trim());
+          youtubeUrl.searchParams.set("key", youtubeKey);
+
+          const youtubeResponse = await fetch(
+            youtubeUrl.toString(),
+            {
+              signal: AbortSignal.timeout(12000),
+            }
+          );
+
+          if (youtubeResponse.ok) {
+            const youtubeData = await youtubeResponse.json();
+
+            const youtubeVideos = Array.isArray(youtubeData.items)
+              ? youtubeData.items.map((item: any) => ({
+                  title: item.snippet?.title || "YouTube video",
+                  url: `https://www.youtube.com/watch?v=${item.id?.videoId}`,
+                  description: item.snippet?.description || "",
+                  thumbnail:
+                    item.snippet?.thumbnails?.high?.url ||
+                    item.snippet?.thumbnails?.medium?.url ||
+                    item.snippet?.thumbnails?.default?.url ||
+                    "",
+                  source: "YouTube",
+                  channelTitle: item.snippet?.channelTitle || "",
+                  kind: "youtube-video",
+                })).filter((item: any) =>
+                  item.url.includes("watch?v=")
+                )
+              : [];
+
+            videos = [...youtubeVideos, ...websiteVideos];
+          } else {
+            console.error(
+              "YouTube API error:",
+              youtubeResponse.status
+            );
+          }
+        } catch (error) {
+          console.error("YouTube search error:", error);
+        }
+      }
+    }
+
+    // Step 4: Generate AI answers with Gemini
+    if (
+      mode === "web" &&
+      geminiKey &&
+      results.length > 0
+    ) {
       try {
         const sources = results
           .map(
-            (
-              item: { title?: string; content?: string; url?: string },
-              index: number
-            ) =>
+            (item: {
+              title?: string;
+              content?: string;
+              url?: string;
+            }, index: number) =>
               `Source ${index + 1}:
 Title: ${item.title || ""}
 URL: ${item.url || ""}
@@ -87,7 +186,7 @@ Content: ${(item.content || "").slice(0, 1000)}`
           .join("\n\n");
 
         const prompt = `
-You are Panjviora AI Search 373.
+You are ALIQO AI Search.
 
 User question:
 ${query.trim()}
@@ -135,11 +234,10 @@ Rules:
         );
 
         if (!geminiResponse.ok) {
-          const errorText = await geminiResponse.text();
           console.error(
             "Gemini API error:",
             geminiResponse.status,
-            errorText
+            await geminiResponse.text()
           );
         } else {
           const geminiData = await geminiResponse.json();
@@ -171,12 +269,18 @@ Rules:
       quickAnswer,
       detailedAnswer,
       results,
+      images,
+      videos,
+      mode,
     });
   } catch (error) {
     console.error("Search API error:", error);
 
     return NextResponse.json(
-      { error: "Search took too long or something went wrong. Please try again." },
+      {
+        error:
+          "Search took too long or something went wrong. Please try again.",
+      },
       { status: 500 }
     );
   }
