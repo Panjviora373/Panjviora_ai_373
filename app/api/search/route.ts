@@ -87,12 +87,90 @@ export async function POST(request: Request) {
     let detailedAnswer = "";
 
     // Step 2: Prepare image results
-    const images = Array.isArray(searchData.images)
-      ? searchData.images.map((image: any) => ({
-          url: image.url || "",
-          description: image.description || "Search image",
-        })).filter((image: any) => image.url)
-      : [];
+    
+// Step 2: Prepare image results
+let images = Array.isArray(searchData.images)
+  ? searchData.images.map((image: any) => ({
+      url: image.url || "",
+      thumbnail: image.url || "",
+      pageUrl: image.url || "",
+      description: image.description || "Search image",
+      source: "Tavily",
+    })).filter((image: any) => image.url)
+  : [];
+
+// Wikimedia Commons image search
+if (mode === "images") {
+  try {
+    const imageUrl = new URL(
+      "https://commons.wikimedia.org/w/api.php"
+    );
+
+    imageUrl.searchParams.set("action", "query");
+    imageUrl.searchParams.set("generator", "search");
+    imageUrl.searchParams.set("gsrsearch", query.trim());
+    imageUrl.searchParams.set("gsrnamespace", "6");
+    imageUrl.searchParams.set("gsrlimit", "30");
+    imageUrl.searchParams.set("prop", "imageinfo");
+    imageUrl.searchParams.set(
+      "iiprop",
+      "url|extmetadata"
+    );
+    imageUrl.searchParams.set("iiurlwidth", "800");
+    imageUrl.searchParams.set("format", "json");
+    imageUrl.searchParams.set("formatversion", "2");
+
+    const imageResponse = await fetch(
+      imageUrl.toString(),
+      {
+        headers: {
+          "User-Agent": "ALIQO-Search/1.0 (image search)",
+        },
+        signal: AbortSignal.timeout(15000),
+        cache: "no-store",
+      }
+    );
+
+    if (imageResponse.ok) {
+      const imageData = await imageResponse.json();
+
+      const pages = Array.isArray(imageData.query?.pages)
+        ? imageData.query.pages
+        : [];
+
+      const wikimediaImages = pages
+        .map((page: any) => {
+          const info = page.imageinfo?.[0];
+
+          if (!info?.url) return null;
+
+          return {
+            url: info.url,
+            thumbnail: info.thumburl || info.url,
+            pageUrl: info.descriptionurl || info.url,
+            description:
+              page.title?.replace(/^File:/, "") ||
+              "Wikimedia image",
+            source: "Wikimedia Commons",
+          };
+        })
+        .filter(Boolean);
+
+      if (wikimediaImages.length > 0) {
+        images = wikimediaImages;
+      }
+    } else {
+      console.error(
+        "Wikimedia API error:",
+        imageResponse.status,
+        await imageResponse.text()
+      );
+    }
+  } catch (error) {
+    console.error("Wikimedia image search error:", error);
+  }
+}
+
 
     // Step 3: Prepare video results
     let videos: any[] = [];
