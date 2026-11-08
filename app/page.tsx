@@ -13,7 +13,10 @@ type SearchResult = {
 
 type ImageResult = {
   url: string;
+  thumbnail?: string;
+  pageUrl?: string;
   description: string;
+  source?: string;
 };
 
 type VideoResult = {
@@ -564,16 +567,17 @@ export default function Home() {
                 {images.map((image, index) => (
                   <a
                     key={`${image.url}-${index}`}
-                    href={image.url}
+                   href={image.pageUrl || image.url}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
                   >
                     <div className="aspect-square overflow-hidden bg-slate-100">
                       <img
-                        src={image.url}
+                       src={image.thumbnail || image.url}
                         alt={image.description || "Search image"}
                         loading="lazy"
+                        decoding="async"
                         className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                       />
                     </div>
