@@ -3,10 +3,27 @@
 
 import { useState, type FormEvent } from "react";
 
+type SearchMode = "web" | "images" | "videos" | "ai";
+
 type SearchResult = {
   title: string;
   url: string;
   content: string;
+};
+
+type ImageResult = {
+  url: string;
+  description: string;
+};
+
+type VideoResult = {
+  title: string;
+  url: string;
+  description: string;
+  thumbnail: string;
+  source: string;
+  channelTitle?: string;
+  kind?: string;
 };
 
 type SpeechRecognitionLike = {
@@ -22,12 +39,12 @@ type SpeechRecognitionLike = {
 };
 
 const topics = [
-  { name: "Technology", icon: "⌘" },
-  { name: "Education", icon: "▤" },
-  { name: "Science", icon: "✧" },
-  { name: "Business", icon: "▣" },
-  { name: "World News", icon: "◎" },
-  { name: "History", icon: "◷" },
+  "Technology",
+  "Education",
+  "Science",
+  "Business",
+  "World News",
+  "History",
 ];
 
 const translations = {
@@ -42,9 +59,8 @@ const translations = {
     quick: "ALIQO Answer",
     results: "Search Results",
     discover: "A smarter way to explore the world",
-    loading: "Searching across the web...",
+    loading: "Searching...",
     loadingDescription: "Finding useful information for you.",
-    resultCount: "results found",
     visit: "Visit Website",
     popular: "Explore popular topics",
     features: "Discover a better way to search",
@@ -63,6 +79,17 @@ const translations = {
     terms: "Terms & Conditions",
     voiceError: "Voice search is not supported. Please use Google Chrome.",
     noResults: "No results found. Please try another search.",
+    web: "Web",
+    images: "Images",
+    videos: "Videos",
+    ai: "AI Search",
+    imageResults: "Image Results",
+    videoResults: "Video Results",
+    noImages: "No images found. Try another search.",
+    noVideos: "No videos found. Try another search.",
+    youtube: "YouTube",
+    otherWebsite: "Other Website",
+    channel: "Channel",
   },
   ur: {
     heading: "لامحدود تلاش کریں۔",
@@ -75,9 +102,8 @@ const translations = {
     quick: "ALIQO کا جواب",
     results: "تلاش کے نتائج",
     discover: "دنیا کو دریافت کرنے کا ایک بہتر انداز",
-    loading: "ویب پر تلاش جاری ہے...",
+    loading: "تلاش جاری ہے...",
     loadingDescription: "آپ کے لیے مفید معلومات تلاش کی جا رہی ہیں۔",
-    resultCount: "نتائج ملے",
     visit: "ویب سائٹ دیکھیں",
     popular: "مشہور موضوعات دریافت کریں",
     features: "تلاش کا ایک بہتر تجربہ",
@@ -96,13 +122,29 @@ const translations = {
     terms: "شرائط و ضوابط",
     voiceError: "وائس سرچ کے لیے Google Chrome استعمال کریں۔",
     noResults: "کوئی نتیجہ نہیں ملا۔ دوبارہ تلاش کریں۔",
+    web: "ویب",
+    images: "تصاویر",
+    videos: "ویڈیوز",
+    ai: "اے آئی سرچ",
+    imageResults: "تصاویر کے نتائج",
+    videoResults: "ویڈیوز کے نتائج",
+    noImages: "کوئی تصویر نہیں ملی۔ دوبارہ تلاش کریں۔",
+    noVideos: "کوئی ویڈیو نہیں ملی۔ دوبارہ تلاش کریں۔",
+    youtube: "یوٹیوب",
+    otherWebsite: "دوسری ویب سائٹ",
+    channel: "چینل",
   },
 };
 
 export default function Home() {
   const [query, setQuery] = useState("");
   const [language, setLanguage] = useState<"en" | "ur">("en");
+  const [mode, setMode] = useState<SearchMode>("web");
+
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [images, setImages] = useState<ImageResult[]>([]);
+  const [videos, setVideos] = useState<VideoResult[]>([]);
+
   const [answer, setAnswer] = useState("");
   const [detailedAnswer, setDetailedAnswer] = useState("");
   const [loading, setLoading] = useState(false);
@@ -166,16 +208,23 @@ export default function Home() {
     setLoading(true);
     setError("");
     setResults([]);
+    setImages([]);
+    setVideos([]);
     setAnswer("");
     setDetailedAnswer("");
 
     try {
+      const apiMode = mode === "ai" ? "web" : mode;
+
       const response = await fetch("/api/search", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ query: query.trim() }),
+        body: JSON.stringify({
+          query: query.trim(),
+          mode: apiMode,
+        }),
       });
 
       const data = await response.json();
@@ -186,6 +235,14 @@ export default function Home() {
 
       const searchResults = Array.isArray(data.results)
         ? data.results
+        : [];
+
+      const imageResults = Array.isArray(data.images)
+        ? data.images
+        : [];
+
+      const videoResults = Array.isArray(data.videos)
+        ? data.videos
         : [];
 
       const quickAnswer =
@@ -201,11 +258,26 @@ export default function Home() {
           : "";
 
       setResults(searchResults);
+      setImages(imageResults);
+      setVideos(videoResults);
       setAnswer(quickAnswer);
       setDetailedAnswer(longAnswer);
 
-      if (!quickAnswer && !longAnswer && searchResults.length === 0) {
-        setError(t.noResults);
+      const hasResults =
+        mode === "images"
+          ? imageResults.length > 0
+          : mode === "videos"
+            ? videoResults.length > 0
+            : searchResults.length > 0 || quickAnswer || longAnswer;
+
+      if (!hasResults) {
+        setError(
+          mode === "images"
+            ? t.noImages
+            : mode === "videos"
+              ? t.noVideos
+              : t.noResults
+        );
       }
     } catch (err) {
       setError(
@@ -217,6 +289,17 @@ export default function Home() {
       setLoading(false);
     }
   }
+
+  const searchTabs: {
+    id: SearchMode;
+    label: string;
+    icon: string;
+  }[] = [
+    { id: "web", label: t.web, icon: "⌕" },
+    { id: "images", label: t.images, icon: "▧" },
+    { id: "videos", label: t.videos, icon: "▶" },
+    { id: "ai", label: t.ai, icon: "✦" },
+  ];
 
   return (
     <main
@@ -243,11 +326,12 @@ export default function Home() {
 
           <div className="flex items-center gap-2">
             <a
-  href="/deals"
-  className="rounded-full bg-blue-50 px-4 py-2 text-xs font-bold text-blue-700 transition hover:bg-blue-100"
->
-  Deals
-</a>
+              href="/deals"
+              className="rounded-full bg-blue-50 px-4 py-2 text-xs font-bold text-blue-700 transition hover:bg-blue-100"
+            >
+              Deals
+            </a>
+
             <button
               type="button"
               onClick={() => setLanguage("en")}
@@ -299,10 +383,37 @@ export default function Home() {
             {t.description}
           </p>
 
+          {/* Search Tabs */}
+          <div className="mt-10 flex flex-wrap justify-center gap-2">
+            {searchTabs.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => {
+                  setMode(tab.id);
+                  setError("");
+                  setResults([]);
+                  setImages([]);
+                  setVideos([]);
+                  setAnswer("");
+                  setDetailedAnswer("");
+                }}
+                className={`flex items-center gap-2 rounded-full px-5 py-3 text-sm font-bold transition ${
+                  mode === tab.id
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
+                    : "border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+                }`}
+              >
+                <span>{tab.icon}</span>
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
           {/* Search Form */}
           <form
             onSubmit={search}
-            className="mt-10 flex w-full max-w-3xl flex-col gap-2 rounded-[26px] border border-slate-200/80 bg-white p-2 shadow-[0_20px_70px_rgba(37,99,235,0.13)] transition focus-within:border-blue-300 focus-within:shadow-[0_20px_80px_rgba(37,99,235,0.20)] sm:flex-row sm:items-center"
+            className="mt-5 flex w-full max-w-3xl flex-col gap-2 rounded-[26px] border border-slate-200/80 bg-white p-2 shadow-[0_20px_70px_rgba(37,99,235,0.13)] transition focus-within:border-blue-300 focus-within:shadow-[0_20px_80px_rgba(37,99,235,0.20)] sm:flex-row sm:items-center"
           >
             <div className="flex min-w-0 flex-1 items-center">
               <span className="px-3 text-2xl text-blue-500">⌕</span>
@@ -352,6 +463,7 @@ export default function Home() {
             <p className="mt-3 text-sm text-red-600">{voiceError}</p>
           )}
 
+          {/* Popular Topics */}
           <div className="mt-10 w-full max-w-3xl">
             <p className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
               {t.popular}
@@ -360,16 +472,15 @@ export default function Home() {
             <div className="flex flex-wrap justify-center gap-2">
               {topics.map((topic) => (
                 <button
-                  key={topic.name}
+                  key={topic}
                   type="button"
                   onClick={() => {
-                    setQuery(topic.name);
+                    setQuery(topic);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
-                  className="flex items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-4 py-2.5 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 sm:text-sm"
+                  className="rounded-full border border-slate-200 bg-white/90 px-4 py-2.5 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 sm:text-sm"
                 >
-                  <span className="text-blue-600">{topic.icon}</span>
-                  {topic.name}
+                  {topic}
                 </button>
               ))}
             </div>
@@ -393,61 +504,166 @@ export default function Home() {
             </div>
           )}
 
-          {/* Detailed Answer */}
-          {detailedAnswer && (
-            <section className="mt-12 w-full rounded-3xl border border-violet-100 bg-white p-6 text-left shadow-lg shadow-violet-100/40 sm:p-9">
-              <div className="mb-6 flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-100 text-2xl text-violet-700">
-                  ✨
-                </div>
-                <div>
-                  <h2 className="font-extrabold text-slate-900">
-                    {t.detailed}
-                  </h2>
-                  <p className="mt-1 text-xs font-medium text-violet-600">
-                    Explained by ALIQO
-                  </p>
-                </div>
-              </div>
+          {/* AI Answers */}
+          {(mode === "ai" || mode === "web") && (
+            <>
+              {detailedAnswer && (
+                <section className="mt-12 w-full rounded-3xl border border-violet-100 bg-white p-6 text-left shadow-lg shadow-violet-100/40 sm:p-9">
+                  <div className="mb-6 flex items-center gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-100 text-2xl text-violet-700">
+                      ✨
+                    </div>
+                    <div>
+                      <h2 className="font-extrabold text-slate-900">
+                        {t.detailed}
+                      </h2>
+                      <p className="mt-1 text-xs font-medium text-violet-600">
+                        Explained by ALIQO
+                      </p>
+                    </div>
+                  </div>
 
-              <p className="whitespace-pre-wrap text-sm leading-8 text-slate-600">
-                {detailedAnswer}
-              </p>
+                  <p className="whitespace-pre-wrap text-sm leading-8 text-slate-600">
+                    {detailedAnswer}
+                  </p>
+                </section>
+              )}
+
+              {answer && (
+                <section className="mt-8 w-full rounded-3xl border border-blue-100 bg-white p-6 text-left shadow-lg shadow-blue-100/40 sm:p-9">
+                  <div className="mb-6 flex items-center gap-3">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600 text-2xl text-white">
+                      ✦
+                    </div>
+                    <div>
+                      <h2 className="font-extrabold text-slate-900">
+                        {t.quick}
+                      </h2>
+                      <p className="mt-1 text-xs font-medium text-blue-600">
+                        ALIQO Search
+                      </p>
+                    </div>
+                  </div>
+
+                  <p className="whitespace-pre-wrap text-sm leading-8 text-slate-600">
+                    {answer}
+                  </p>
+                </section>
+              )}
+            </>
+          )}
+
+          {/* Image Results */}
+          {mode === "images" && images.length > 0 && (
+            <section className="mt-12 w-full text-left">
+              <h2 className="mb-6 text-xl font-extrabold text-slate-900">
+                {t.imageResults} ({images.length})
+              </h2>
+
+              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
+                {images.map((image, index) => (
+                  <a
+                    key={`${image.url}-${index}`}
+                    href={image.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                  >
+                    <div className="aspect-square overflow-hidden bg-slate-100">
+                      <img
+                        src={image.url}
+                        alt={image.description || "Search image"}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                      />
+                    </div>
+                    <p className="line-clamp-2 p-3 text-xs font-semibold text-slate-600">
+                      {image.description || "Search image"}
+                    </p>
+                  </a>
+                ))}
+              </div>
             </section>
           )}
 
-          {/* Quick Answer */}
-          {answer && (
-            <section className="mt-8 w-full rounded-3xl border border-blue-100 bg-white p-6 text-left shadow-lg shadow-blue-100/40 sm:p-9">
-              <div className="mb-6 flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600 text-2xl text-white">
-                  ✦
-                </div>
-                <div>
-                  <h2 className="font-extrabold text-slate-900">
-                    {t.quick}
-                  </h2>
-                  <p className="mt-1 text-xs font-medium text-blue-600">
-                    ALIQO Search
-                  </p>
-                </div>
-              </div>
+          {/* Video Results */}
+          {mode === "videos" && videos.length > 0 && (
+            <section className="mt-12 w-full text-left">
+              <h2 className="mb-6 text-xl font-extrabold text-slate-900">
+                {t.videoResults} ({videos.length})
+              </h2>
 
-              <p className="whitespace-pre-wrap text-sm leading-8 text-slate-600">
-                {answer}
-              </p>
+              <div className="grid gap-5 sm:grid-cols-2">
+                {videos.map((video, index) => (
+                  <article
+                    key={`${video.url}-${index}`}
+                    className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                  >
+                    <a
+                      href={video.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block"
+                    >
+                      {video.thumbnail ? (
+                        <div className="relative aspect-video overflow-hidden bg-slate-100">
+                          <img
+                            src={video.thumbnail}
+                            alt={video.title}
+                            loading="lazy"
+                            className="h-full w-full object-cover"
+                          />
+                          <span className="absolute inset-0 flex items-center justify-center bg-black/10 text-5xl text-white">
+                            ▶
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-blue-100 to-violet-100 text-6xl text-blue-600">
+                          ▶
+                        </div>
+                      )}
+
+                      <div className="p-5">
+                        <span className="mb-3 inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">
+                          {video.source === "YouTube"
+                            ? t.youtube
+                            : t.otherWebsite}
+                        </span>
+
+                        <h3 className="font-extrabold leading-6 text-slate-900 hover:text-blue-700">
+                          {video.title}
+                        </h3>
+
+                        {video.channelTitle && (
+                          <p className="mt-2 text-xs font-semibold text-violet-600">
+                            {t.channel}: {video.channelTitle}
+                          </p>
+                        )}
+
+                        <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-500">
+                          {video.description}
+                        </p>
+
+                        <span className="mt-4 inline-flex rounded-full bg-blue-600 px-4 py-2 text-xs font-bold text-white">
+                          Watch Video ↗
+                        </span>
+                      </div>
+                    </a>
+                  </article>
+                ))}
+              </div>
             </section>
           )}
 
-          {/* Search Results */}
-          {results.length > 0 && (
+          {/* Web Results */}
+          {mode === "web" && results.length > 0 && (
             <section className="mt-12 w-full text-left">
               <div className="mb-6 flex items-center justify-between">
                 <h2 className="text-xl font-extrabold text-slate-900">
                   {t.results}
                 </h2>
                 <span className="rounded-full bg-blue-100 px-4 py-2 text-xs font-bold text-blue-700">
-                  {results.length} {t.resultCount}
+                  {results.length} results
                 </span>
               </div>
 
@@ -594,12 +810,9 @@ export default function Home() {
               <a href="/" className="text-slate-300 transition hover:text-white">
                 {t.home}
               </a>
-              <a
-  href="/deals"
-  className="text-slate-300 transition hover:text-white"
->
-  Deals
-</a>
+              <a href="/deals" className="text-slate-300 transition hover:text-white">
+                Deals
+              </a>
               <a href="/about" className="text-slate-300 transition hover:text-white">
                 {t.about}
               </a>
