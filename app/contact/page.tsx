@@ -2,84 +2,123 @@
 export default function ContactPage() {
   return (
     <main className="min-h-screen bg-[#F3F7F1] text-[#17251B]">
-      <nav className="border-b border-white/10 bg-[#0B1A11] px-6 py-5">
-        <a
-          href="/"
-          className="text-2xl font-bold tracking-wide text-[#E4C35D]"
-        >
-          ALIQO
-        </a>
-      </nav>
+      {/* Header */}
+      <header className="border-b border-[#D6C58B]/30 bg-[#0B1A11] px-6 py-5">
+        <div className="mx-auto flex max-w-5xl items-center justify-between">
+          <a
+            href="/"
+            className="text-3xl font-extrabold tracking-wider text-[#E4C35D]"
+          >
+            ALIQO
+          </a>
 
-      <article className="mx-auto max-w-4xl px-6 py-16 md:py-24">
-        <header className="mb-12 rounded-3xl bg-[#10251A] px-8 py-12 text-white shadow-xl md:px-12">
-          <p className="mb-4 text-sm font-bold tracking-[0.25em] text-[#E4C35D]">
-            WE ARE HERE TO HELP
-          </p>
-
-          <h1 className="mb-5 text-4xl font-bold md:text-5xl">
+          <span className="text-sm font-medium text-[#E4C35D]">
             Contact Us
-          </h1>
+          </span>
+        </div>
+      </header>
 
-          <p className="max-w-2xl leading-8 text-slate-300">
-            Thank you for visiting ALIQO. We welcome your questions,
-            suggestions, feedback, and business inquiries. Our team
-            appreciates hearing from you.
-          </p>
-        </header>
+      {/* Hero */}
+      <section className="bg-[#10251A] px-6 py-16 text-center">
+        <p className="mb-3 text-sm font-bold uppercase tracking-[0.25em] text-[#E4C35D]">
+          WE ARE HERE TO HELP
+        </p>
 
-        <section className="mb-8 rounded-3xl border border-[#DCE5D9] bg-white p-8 shadow-sm md:p-10">
-          <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#EAF1E7] text-2xl">
-            ✉
+        <h1 className="text-4xl font-extrabold text-white md:text-5xl">
+          Contact Us
+        </h1>
+
+        <p className="mx-auto mt-5 max-w-xl leading-7 text-green-100">
+          Have a question, suggestion, or business inquiry?
+          We would love to hear from you.
+        </p>
+      </section>
+
+      {/* Contact Content */}
+      <section className="mx-auto max-w-4xl px-5 py-14">
+        <div className="grid gap-7 md:grid-cols-2">
+
+          {/* Email Card */}
+          <div className="rounded-2xl border border-[#DCE5D9] bg-white p-8 shadow-sm">
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-[#183522] text-2xl text-[#E4C35D]">
+              ✉
+            </div>
+
+            <h2 className="text-2xl font-bold text-[#183522]">
+              Email Support
+            </h2>
+
+            <p className="mt-4 leading-7 text-[#526356]">
+              For questions, technical support, or general inquiries,
+              contact our team through email.
+            </p>
+
+            <a
+              href="mailto:aliqo37311011@gmail.com"
+              className="mt-6 inline-block break-all font-semibold text-[#98751D] underline underline-offset-4 hover:text-[#183522]"
+            >
+              aliqo37311011@gmail.com
+            </a>
           </div>
 
-          <p className="mb-2 text-sm font-bold tracking-widest text-[#98751D]">
-            GET IN TOUCH
+          {/* Feedback Card */}
+          <div className="rounded-2xl border border-[#DCE5D9] bg-white p-8 shadow-sm">
+            <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-xl bg-[#183522] text-2xl text-[#E4C35D]">
+              ★
+            </div>
+
+            <h2 className="text-2xl font-bold text-[#183522]">
+              Your Feedback Matters
+            </h2>
+
+            <p className="mt-4 leading-7 text-[#526356]">
+              Your suggestions help us improve ALIQO. Share your
+              ideas, report an issue, or tell us about your experience.
+            </p>
+
+            <a
+              href="mailto:aliqo37311011@gmail.com?subject=ALIQO%20Feedback"
+              className="mt-6 inline-flex rounded-xl bg-[#183522] px-6 py-3 font-semibold text-white transition hover:bg-[#0B1A11]"
+            >
+              Send Your Feedback →
+            </a>
+          </div>
+        </div>
+
+        {/* Message Section */}
+        <div className="mt-8 rounded-2xl border border-[#DCE5D9] bg-white p-8 text-center shadow-sm">
+          <p className="text-sm font-bold uppercase tracking-widest text-[#98751D]">
+            ALIQO SUPPORT
           </p>
 
-          <h2 className="mb-4 text-2xl font-bold text-[#183522]">
-            We'd Love to Hear From You
+          <h2 className="mt-3 text-2xl font-bold text-[#183522]">
+            We Appreciate Your Trust
           </h2>
 
-          <p className="mb-6 leading-8 text-slate-600">
-            For support, business inquiries, advertising questions,
-            or general feedback, please contact us by email.
+          <p className="mx-auto mt-4 max-w-2xl leading-8 text-[#526356]">
+            We are continuously working to make your search
+            experience better, smarter, and more useful.
+            Thank you for being part of ALIQO.
           </p>
 
           <a
-            href="mailto:aliqo37311011@gmail.com"
-            className="inline-block break-all rounded-full bg-[#10251A] px-7 py-3 font-semibold text-[#E4C35D] transition hover:bg-[#1B3826]"
+            href="/"
+            className="mt-7 inline-flex rounded-xl bg-[#183522] px-7 py-3 font-semibold text-white transition hover:bg-[#0B1A11]"
           >
-            aliqo37311011@gmail.com
+            ← Back to Home
           </a>
-        </section>
+        </div>
+      </section>
 
-        <section className="mb-10 rounded-3xl border border-[#DCE5D9] bg-white p-8 shadow-sm md:p-10">
-          <p className="mb-2 text-sm font-bold tracking-widest text-[#98751D]">
-            YOUR VOICE MATTERS
-          </p>
+      {/* Footer */}
+      <footer className="bg-[#090F0B] px-6 py-7 text-center">
+        <p className="text-sm text-green-100">
+          © 2026 ALIQO. All rights reserved.
+        </p>
 
-          <h2 className="mb-4 text-2xl font-bold text-[#183522]">
-            Your Feedback Helps Us Grow
-          </h2>
-
-          <p className="leading-8 text-slate-600">
-            Your suggestions and feedback help us improve ALIQO
-            and make the search experience more useful, reliable,
-            and accessible for everyone.
-          </p>
-        </section>
-
-        <a
-          href="/"
-          className="inline-block rounded-full bg-[#10251A] px-8 py-3 font-semibold text-[#E4C35D] transition hover:bg-[#1B3826]"
-        >
-          ← Back to Home
-        </a>
-      </article>
-
-      <footer className="border-t border-[#26382B] bg-[#090F0B] px-6 py-8 text-center text-sm text-slate-400">
-        © 2026 ALIQO. All rights reserved.
+        <p className="mt-2 text-xs text-[#C6A33D]">
+          Search Smarter. Discover More.
+        </p>
       </footer>
     </main>
   );
