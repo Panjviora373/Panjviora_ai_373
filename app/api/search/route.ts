@@ -110,13 +110,13 @@ if (mode === "images") {
     imageUrl.searchParams.set("generator", "search");
     imageUrl.searchParams.set("gsrsearch", query.trim());
     imageUrl.searchParams.set("gsrnamespace", "6");
-    imageUrl.searchParams.set("gsrlimit", "30");
+    imageUrl.searchParams.set("gsrlimit", "15");
     imageUrl.searchParams.set("prop", "imageinfo");
     imageUrl.searchParams.set(
       "iiprop",
       "url|extmetadata"
     );
-    imageUrl.searchParams.set("iiurlwidth", "800");
+    imageUrl.searchParams.set("iiurlwidth", "500");
     imageUrl.searchParams.set("format", "json");
     imageUrl.searchParams.set("formatversion", "2");
 
