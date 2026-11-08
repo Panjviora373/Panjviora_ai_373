@@ -71,16 +71,19 @@ const translations = {
     smartTitle: "Helpful Answers",
     smartDescription: "Understand topics with clear and useful answers.",
     discoveryTitle: "Web Discovery",
-    discoveryDescription: "Find websites and explore information from across the web.",
+    discoveryDescription:
+      "Find websites and explore information from across the web.",
     simpleTitle: "Simple Experience",
-    simpleDescription: "A clean, easy and comfortable search experience.",
+    simpleDescription:
+      "A clean, easy and comfortable search experience.",
     footer: "Explore more. Discover more.",
     home: "Home",
     about: "About Us",
     privacy: "Privacy Policy",
     contact: "Contact",
     terms: "Terms & Conditions",
-    voiceError: "Voice search is not supported. Please use Google Chrome.",
+    voiceError:
+      "Voice search is not supported. Please use Google Chrome.",
     noResults: "No results found. Please try another search.",
     web: "Web",
     images: "Images",
@@ -139,6 +142,15 @@ const translations = {
   },
 };
 
+const goldButton =
+  "bg-gradient-to-r from-[#C49A32] to-[#E7C766] text-[#101710] shadow-lg shadow-yellow-900/10 hover:brightness-105";
+
+const greenButton =
+  "bg-[#173B2B] text-[#F3D77C] hover:bg-[#20533B]";
+
+const cardStyle =
+  "rounded-3xl border border-[#D9E2D8] bg-white shadow-sm transition hover:-translate-y-1 hover:border-[#C49A32] hover:shadow-xl";
+
 export default function Home() {
   const [query, setQuery] = useState("");
   const [language, setLanguage] = useState<"en" | "ur">("en");
@@ -190,9 +202,7 @@ export default function Home() {
       setListening(false);
     };
 
-    recognition.onend = () => {
-      setListening(false);
-    };
+    recognition.onend = () => setListening(false);
 
     try {
       setListening(true);
@@ -306,22 +316,22 @@ export default function Home() {
 
   return (
     <main
-      className="min-h-screen overflow-hidden bg-[#f7f9ff] text-slate-800"
+      className="min-h-screen overflow-hidden bg-[#F3F6F1] text-[#18271D]"
       dir={language === "ur" ? "rtl" : "ltr"}
     >
       {/* Header */}
-      <header className="sticky top-0 z-30 border-b border-slate-200/70 bg-white/90 backdrop-blur-xl">
+      <header className="sticky top-0 z-30 border-b border-[#D7E0D5] bg-[#10271D]/95 text-white shadow-lg backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4">
           <a href="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 via-indigo-600 to-violet-600 text-2xl font-black text-white shadow-lg shadow-blue-200">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl border border-[#E1C15B] bg-gradient-to-br from-[#D8B64F] to-[#A77B20] text-2xl font-black text-[#10271D] shadow-lg">
               A
             </div>
 
             <div>
-              <div className="text-xl font-black tracking-tight text-slate-900">
-                ALI<span className="text-blue-600">QO</span>
+              <div className="text-xl font-black tracking-tight text-white">
+                ALI<span className="text-[#E4C35D]">QO</span>
               </div>
-              <div className="text-[9px] font-bold tracking-[0.25em] text-slate-400">
+              <div className="text-[9px] font-bold tracking-[0.25em] text-[#C9D5CA]">
                 DISCOVER MORE
               </div>
             </div>
@@ -330,7 +340,7 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <a
               href="/deals"
-              className="rounded-full bg-blue-50 px-4 py-2 text-xs font-bold text-blue-700 transition hover:bg-blue-100"
+              className="rounded-full border border-[#B9953B]/50 bg-[#D4AF37]/10 px-4 py-2 text-xs font-bold text-[#F0D77F] transition hover:bg-[#D4AF37]/20"
             >
               Deals
             </a>
@@ -340,8 +350,8 @@ export default function Home() {
               onClick={() => setLanguage("en")}
               className={`rounded-full px-3 py-2 text-xs font-bold transition ${
                 language === "en"
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-200"
-                  : "text-slate-500 hover:bg-slate-100"
+                  ? "bg-[#D4AF37] text-[#10271D]"
+                  : "text-white hover:bg-white/10"
               }`}
             >
               EN
@@ -352,8 +362,8 @@ export default function Home() {
               onClick={() => setLanguage("ur")}
               className={`rounded-full px-3 py-2 text-xs font-bold transition ${
                 language === "ur"
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-200"
-                  : "text-slate-500 hover:bg-slate-100"
+                  ? "bg-[#D4AF37] text-[#10271D]"
+                  : "text-white hover:bg-white/10"
               }`}
             >
               اردو
@@ -364,25 +374,25 @@ export default function Home() {
 
       {/* Hero */}
       <section className="relative px-5 pb-20 pt-16 text-center sm:pt-24 md:pb-28 md:pt-28">
-        <div className="pointer-events-none absolute left-1/2 top-0 -z-0 h-[450px] w-[850px] -translate-x-1/2 rounded-full bg-gradient-to-r from-blue-100/70 via-violet-100/50 to-cyan-100/70 blur-[100px]" />
+        <div className="pointer-events-none absolute left-1/2 top-0 -z-0 h-[450px] w-[850px] -translate-x-1/2 rounded-full bg-gradient-to-r from-[#D4AF37]/20 via-[#B5C9A9]/30 to-[#173B2B]/15 blur-[100px]" />
 
         <div className="relative mx-auto flex max-w-5xl flex-col items-center">
-          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white/80 px-5 py-2.5 text-xs font-bold tracking-wide text-blue-700 shadow-sm">
-            <span className="h-2 w-2 rounded-full bg-blue-600" />
+          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-[#D4AF37]/40 bg-white/90 px-5 py-2.5 text-xs font-bold tracking-wide text-[#173B2B] shadow-sm">
+            <span className="h-2 w-2 rounded-full bg-[#C49A32]" />
             {t.discover}
           </div>
 
           <h1 className="text-6xl font-black tracking-[-0.06em] sm:text-7xl md:text-9xl">
-            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-violet-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#173B2B] via-[#316344] to-[#C49A32] bg-clip-text text-transparent">
               ALIQO
             </span>
           </h1>
 
-          <h2 className="mt-7 max-w-3xl text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl md:text-5xl">
+          <h2 className="mt-7 max-w-3xl text-3xl font-extrabold leading-tight tracking-tight text-[#10271D] sm:text-4xl md:text-5xl">
             {t.heading}
           </h2>
 
-          <p className="mt-5 max-w-2xl text-base leading-8 text-slate-500 sm:text-lg">
+          <p className="mt-5 max-w-2xl text-base leading-8 text-[#647468] sm:text-lg">
             {t.description}
           </p>
 
@@ -403,8 +413,8 @@ export default function Home() {
                 }}
                 className={`flex items-center gap-2 rounded-full px-5 py-3 text-sm font-bold transition ${
                   mode === tab.id
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
-                    : "border border-slate-200 bg-white text-slate-600 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700"
+                    ? `${greenButton} shadow-lg shadow-green-900/20`
+                    : "border border-[#D5DED2] bg-white text-[#405447] hover:border-[#C49A32] hover:bg-[#F8F3E5] hover:text-[#173B2B]"
                 }`}
               >
                 <span>{tab.icon}</span>
@@ -416,16 +426,16 @@ export default function Home() {
           {/* Search Form */}
           <form
             onSubmit={search}
-            className="mt-5 flex w-full max-w-3xl flex-col gap-2 rounded-[26px] border border-slate-200/80 bg-white p-2 shadow-[0_20px_70px_rgba(37,99,235,0.13)] transition focus-within:border-blue-300 focus-within:shadow-[0_20px_80px_rgba(37,99,235,0.20)] sm:flex-row sm:items-center"
+            className="mt-5 flex w-full max-w-3xl flex-col gap-2 rounded-[26px] border border-[#D5DED2] bg-white p-2 shadow-[0_20px_70px_rgba(23,59,43,0.12)] transition focus-within:border-[#C49A32] focus-within:shadow-[0_20px_80px_rgba(196,154,50,0.16)] sm:flex-row sm:items-center"
           >
             <div className="flex min-w-0 flex-1 items-center">
-              <span className="px-3 text-2xl text-blue-500">⌕</span>
+              <span className="px-3 text-2xl text-[#B58B2B]">⌕</span>
 
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={t.placeholder}
-                className="min-w-0 flex-1 bg-transparent px-2 py-4 text-sm text-slate-800 outline-none placeholder:text-slate-400 sm:text-base"
+                className="min-w-0 flex-1 bg-transparent px-2 py-4 text-sm text-[#18271D] outline-none placeholder:text-[#9AA79B] sm:text-base"
                 required
                 aria-label="Search"
               />
@@ -434,7 +444,7 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => setQuery("")}
-                  className="px-3 text-xl text-slate-400 transition hover:text-slate-800"
+                  className="px-3 text-xl text-[#8A998D] transition hover:text-[#10271D]"
                   aria-label="Clear search"
                 >
                   ×
@@ -445,7 +455,7 @@ export default function Home() {
                 type="button"
                 onClick={startVoiceSearch}
                 disabled={listening || loading}
-                className="mr-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-xl text-violet-700 transition hover:bg-violet-100 disabled:opacity-50"
+                className="mr-1 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#EAF0E8] text-xl text-[#173B2B] transition hover:bg-[#DCE8D9] disabled:opacity-50"
                 aria-label="Voice Search"
                 title="Voice Search"
               >
@@ -456,7 +466,7 @@ export default function Home() {
             <button
               type="submit"
               disabled={loading || !query.trim()}
-              className="rounded-2xl bg-gradient-to-r from-blue-600 to-violet-600 px-8 py-4 text-sm font-bold text-white shadow-lg shadow-blue-200 transition hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+              className={`rounded-2xl px-8 py-4 text-sm font-bold transition hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 ${goldButton}`}
             >
               {loading ? t.searching : t.search + " →"}
             </button>
@@ -468,7 +478,7 @@ export default function Home() {
 
           {/* Popular Topics */}
           <div className="mt-10 w-full max-w-3xl">
-            <p className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
+            <p className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-[#7C8C7D]">
               {t.popular}
             </p>
 
@@ -481,7 +491,7 @@ export default function Home() {
                     setQuery(topic);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
-                  className="rounded-full border border-slate-200 bg-white/90 px-4 py-2.5 text-xs font-semibold text-slate-600 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 sm:text-sm"
+                  className="rounded-full border border-[#D5DED2] bg-white/90 px-4 py-2.5 text-xs font-semibold text-[#526456] shadow-sm transition hover:-translate-y-0.5 hover:border-[#C49A32] hover:bg-[#F8F3E5] hover:text-[#173B2B] sm:text-sm"
                 >
                   {topic}
                 </button>
@@ -491,10 +501,10 @@ export default function Home() {
 
           {/* Loading */}
           {loading && (
-            <div className="mt-12 w-full rounded-3xl border border-blue-100 bg-white p-10 shadow-lg">
-              <div className="mx-auto mb-5 h-11 w-11 animate-spin rounded-full border-4 border-blue-100 border-t-blue-600" />
-              <p className="font-bold text-blue-700">{t.loading}</p>
-              <p className="mt-2 text-sm text-slate-400">
+            <div className="mt-12 w-full rounded-3xl border border-[#D4AF37]/40 bg-white p-10 shadow-lg">
+              <div className="mx-auto mb-5 h-11 w-11 animate-spin rounded-full border-4 border-[#E8EEDF] border-t-[#C49A32]" />
+              <p className="font-bold text-[#173B2B]">{t.loading}</p>
+              <p className="mt-2 text-sm text-[#829084]">
                 {t.loadingDescription}
               </p>
             </div>
@@ -511,44 +521,44 @@ export default function Home() {
           {(mode === "ai" || mode === "web") && (
             <>
               {detailedAnswer && (
-                <section className="mt-12 w-full rounded-3xl border border-violet-100 bg-white p-6 text-left shadow-lg shadow-violet-100/40 sm:p-9">
+                <section className="mt-12 w-full rounded-3xl border border-[#D4AF37]/40 bg-white p-6 text-left shadow-lg sm:p-9">
                   <div className="mb-6 flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-100 text-2xl text-violet-700">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F7F0D9] text-2xl text-[#9A741D]">
                       ✨
                     </div>
                     <div>
-                      <h2 className="font-extrabold text-slate-900">
+                      <h2 className="font-extrabold text-[#10271D]">
                         {t.detailed}
                       </h2>
-                      <p className="mt-1 text-xs font-medium text-violet-600">
+                      <p className="mt-1 text-xs font-medium text-[#A17C26]">
                         Explained by ALIQO
                       </p>
                     </div>
                   </div>
 
-                  <p className="whitespace-pre-wrap text-sm leading-8 text-slate-600">
+                  <p className="whitespace-pre-wrap text-sm leading-8 text-[#536457]">
                     {detailedAnswer}
                   </p>
                 </section>
               )}
 
               {answer && (
-                <section className="mt-8 w-full rounded-3xl border border-blue-100 bg-white p-6 text-left shadow-lg shadow-blue-100/40 sm:p-9">
+                <section className="mt-8 w-full rounded-3xl border border-[#D9E2D8] bg-white p-6 text-left shadow-lg sm:p-9">
                   <div className="mb-6 flex items-center gap-3">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600 text-2xl text-white">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#173B2B] text-2xl text-[#E4C35D]">
                       ✦
                     </div>
                     <div>
-                      <h2 className="font-extrabold text-slate-900">
+                      <h2 className="font-extrabold text-[#10271D]">
                         {t.quick}
                       </h2>
-                      <p className="mt-1 text-xs font-medium text-blue-600">
+                      <p className="mt-1 text-xs font-medium text-[#A17C26]">
                         ALIQO Search
                       </p>
                     </div>
                   </div>
 
-                  <p className="whitespace-pre-wrap text-sm leading-8 text-slate-600">
+                  <p className="whitespace-pre-wrap text-sm leading-8 text-[#536457]">
                     {answer}
                   </p>
                 </section>
@@ -559,7 +569,7 @@ export default function Home() {
           {/* Image Results */}
           {mode === "images" && images.length > 0 && (
             <section className="mt-12 w-full text-left">
-              <h2 className="mb-6 text-xl font-extrabold text-slate-900">
+              <h2 className="mb-6 text-xl font-extrabold text-[#10271D]">
                 {t.imageResults} ({images.length})
               </h2>
 
@@ -567,21 +577,21 @@ export default function Home() {
                 {images.map((image, index) => (
                   <a
                     key={`${image.url}-${index}`}
-                   href={image.pageUrl || image.url}
+                    href={image.pageUrl || image.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                    className="group overflow-hidden rounded-2xl border border-[#D9E2D8] bg-white shadow-sm transition hover:-translate-y-1 hover:border-[#C49A32] hover:shadow-xl"
                   >
-                    <div className="aspect-square overflow-hidden bg-slate-100">
+                    <div className="aspect-square overflow-hidden bg-[#E9EFE7]">
                       <img
-                       src={image.thumbnail || image.url}
+                        src={image.thumbnail || image.url}
                         alt={image.description || "Search image"}
                         loading="lazy"
                         decoding="async"
                         className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
                       />
                     </div>
-                    <p className="line-clamp-2 p-3 text-xs font-semibold text-slate-600">
+                    <p className="line-clamp-2 p-3 text-xs font-semibold text-[#526456]">
                       {image.description || "Search image"}
                     </p>
                   </a>
@@ -593,7 +603,7 @@ export default function Home() {
           {/* Video Results */}
           {mode === "videos" && videos.length > 0 && (
             <section className="mt-12 w-full text-left">
-              <h2 className="mb-6 text-xl font-extrabold text-slate-900">
+              <h2 className="mb-6 text-xl font-extrabold text-[#10271D]">
                 {t.videoResults} ({videos.length})
               </h2>
 
@@ -601,7 +611,7 @@ export default function Home() {
                 {videos.map((video, index) => (
                   <article
                     key={`${video.url}-${index}`}
-                    className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl"
+                    className={cardStyle}
                   >
                     <a
                       href={video.url}
@@ -610,11 +620,12 @@ export default function Home() {
                       className="block"
                     >
                       {video.thumbnail ? (
-                        <div className="relative aspect-video overflow-hidden bg-slate-100">
+                        <div className="relative aspect-video overflow-hidden rounded-t-3xl bg-[#E9EFE7]">
                           <img
                             src={video.thumbnail}
                             alt={video.title}
                             loading="lazy"
+                            decoding="async"
                             className="h-full w-full object-cover"
                           />
                           <span className="absolute inset-0 flex items-center justify-center bg-black/10 text-5xl text-white">
@@ -622,33 +633,33 @@ export default function Home() {
                           </span>
                         </div>
                       ) : (
-                        <div className="flex aspect-video items-center justify-center bg-gradient-to-br from-blue-100 to-violet-100 text-6xl text-blue-600">
+                        <div className="flex aspect-video items-center justify-center rounded-t-3xl bg-gradient-to-br from-[#E7EEDF] to-[#D4AF37]/30 text-6xl text-[#173B2B]">
                           ▶
                         </div>
                       )}
 
                       <div className="p-5">
-                        <span className="mb-3 inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-bold text-blue-700">
+                        <span className="mb-3 inline-flex rounded-full bg-[#F7F0D9] px-3 py-1 text-xs font-bold text-[#85631B]">
                           {video.source === "YouTube"
                             ? t.youtube
                             : t.otherWebsite}
                         </span>
 
-                        <h3 className="font-extrabold leading-6 text-slate-900 hover:text-blue-700">
+                        <h3 className="font-extrabold leading-6 text-[#10271D] hover:text-[#9A741D]">
                           {video.title}
                         </h3>
 
                         {video.channelTitle && (
-                          <p className="mt-2 text-xs font-semibold text-violet-600">
+                          <p className="mt-2 text-xs font-semibold text-[#A17C26]">
                             {t.channel}: {video.channelTitle}
                           </p>
                         )}
 
-                        <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-500">
+                        <p className="mt-3 line-clamp-3 text-sm leading-6 text-[#647468]">
                           {video.description}
                         </p>
 
-                        <span className="mt-4 inline-flex rounded-full bg-blue-600 px-4 py-2 text-xs font-bold text-white">
+                        <span className={`mt-4 inline-flex rounded-full px-4 py-2 text-xs font-bold ${greenButton}`}>
                           Watch Video ↗
                         </span>
                       </div>
@@ -663,10 +674,10 @@ export default function Home() {
           {mode === "web" && results.length > 0 && (
             <section className="mt-12 w-full text-left">
               <div className="mb-6 flex items-center justify-between">
-                <h2 className="text-xl font-extrabold text-slate-900">
+                <h2 className="text-xl font-extrabold text-[#10271D]">
                   {t.results}
                 </h2>
-                <span className="rounded-full bg-blue-100 px-4 py-2 text-xs font-bold text-blue-700">
+                <span className="rounded-full bg-[#E8EEDF] px-4 py-2 text-xs font-bold text-[#173B2B]">
                   {results.length} results
                 </span>
               </div>
@@ -684,10 +695,10 @@ export default function Home() {
                   return (
                     <article
                       key={`${item.url}-${index}`}
-                      className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-xl sm:p-8"
+                      className="rounded-3xl border border-[#D9E2D8] bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-[#C49A32] hover:shadow-xl sm:p-8"
                     >
-                      <div className="mb-3 flex items-center gap-2 text-xs font-medium text-slate-400">
-                        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-50 text-blue-600">
+                      <div className="mb-3 flex items-center gap-2 text-xs font-medium text-[#829084]">
+                        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#E8EEDF] text-[#173B2B]">
                           ↗
                         </span>
                         {hostname}
@@ -697,12 +708,12 @@ export default function Home() {
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="break-words text-lg font-bold text-blue-700 transition hover:text-violet-700 hover:underline"
+                        className="break-words text-lg font-bold text-[#173B2B] transition hover:text-[#A17C26] hover:underline"
                       >
                         {item.title || item.url}
                       </a>
 
-                      <p className="mt-3 break-words text-sm leading-7 text-slate-600">
+                      <p className="mt-3 break-words text-sm leading-7 text-[#647468]">
                         {item.content}
                       </p>
 
@@ -710,7 +721,7 @@ export default function Home() {
                         href={item.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="mt-5 inline-flex items-center gap-2 rounded-full bg-blue-50 px-4 py-2 text-xs font-bold text-blue-700 transition hover:bg-blue-100"
+                        className="mt-5 inline-flex items-center gap-2 rounded-full bg-[#E8EEDF] px-4 py-2 text-xs font-bold text-[#173B2B] transition hover:bg-[#DCE8D9]"
                       >
                         {t.visit} <span>↗</span>
                       </a>
@@ -724,18 +735,18 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section className="border-y border-slate-200/70 bg-white px-5 py-20 sm:py-24">
+      <section className="border-y border-[#D9E2D8] bg-white px-5 py-20 sm:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="mx-auto mb-14 max-w-2xl text-center">
-            <span className="text-xs font-bold uppercase tracking-[0.2em] text-blue-600">
+            <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#A17C26]">
               THE ALIQO EXPERIENCE
             </span>
 
-            <h2 className="mt-4 text-3xl font-black tracking-tight text-slate-900 sm:text-4xl">
+            <h2 className="mt-4 text-3xl font-black tracking-tight text-[#10271D] sm:text-4xl">
               {t.features}
             </h2>
 
-            <p className="mt-4 text-sm leading-7 text-slate-500 sm:text-base">
+            <p className="mt-4 text-sm leading-7 text-[#647468] sm:text-base">
               {t.featuresDescription}
             </p>
           </div>
@@ -746,39 +757,39 @@ export default function Home() {
                 icon: "✦",
                 title: t.smartTitle,
                 description: t.smartDescription,
-                color: "from-blue-500 to-indigo-600",
-                background: "bg-blue-50",
+                color: "from-[#173B2B] to-[#316344]",
+                background: "bg-[#E8EEDF]",
               },
               {
                 icon: "⌕",
                 title: t.discoveryTitle,
                 description: t.discoveryDescription,
-                color: "from-violet-500 to-purple-600",
-                background: "bg-violet-50",
+                color: "from-[#A17C26] to-[#D4AF37]",
+                background: "bg-[#F7F0D9]",
               },
               {
                 icon: "⚡",
                 title: t.simpleTitle,
                 description: t.simpleDescription,
-                color: "from-cyan-500 to-blue-600",
-                background: "bg-cyan-50",
+                color: "from-[#10271D] to-[#49765A]",
+                background: "bg-[#E8EEDF]",
               },
             ].map((feature) => (
               <div
                 key={feature.title}
-                className="group rounded-3xl border border-slate-100 bg-[#fbfcff] p-8 transition duration-300 hover:-translate-y-2 hover:border-blue-100 hover:bg-white hover:shadow-[0_20px_60px_rgba(37,99,235,0.10)]"
+                className="group rounded-3xl border border-[#E1E8DF] bg-[#F8FAF6] p-8 transition duration-300 hover:-translate-y-2 hover:border-[#C49A32] hover:bg-white hover:shadow-[0_20px_60px_rgba(23,59,43,0.10)]"
               >
                 <div
-                  className={`mb-7 flex h-14 w-14 items-center justify-center rounded-2xl ${feature.background} text-2xl text-blue-700 transition group-hover:scale-110`}
+                  className={`mb-7 flex h-14 w-14 items-center justify-center rounded-2xl ${feature.background} text-2xl text-[#173B2B] transition group-hover:scale-110`}
                 >
                   {feature.icon}
                 </div>
 
-                <h3 className="text-lg font-extrabold text-slate-900">
+                <h3 className="text-lg font-extrabold text-[#10271D]">
                   {feature.title}
                 </h3>
 
-                <p className="mt-3 text-sm leading-7 text-slate-500">
+                <p className="mt-3 text-sm leading-7 text-[#647468]">
                   {feature.description}
                 </p>
 
@@ -792,47 +803,47 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#101a35] px-5 pb-8 pt-14 text-white">
+      <footer className="bg-[#090F0B] px-5 pb-8 pt-14 text-white">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-10 border-b border-white/10 pb-10 sm:grid-cols-2">
             <div>
               <a href="/" className="inline-flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-violet-600 text-xl font-black">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#D4AF37] bg-gradient-to-br from-[#D8B64F] to-[#A77B20] text-xl font-black text-[#10271D]">
                   A
                 </div>
                 <span className="text-2xl font-black tracking-tight">
-                  ALI<span className="text-blue-400">QO</span>
+                  ALI<span className="text-[#E4C35D]">QO</span>
                 </span>
               </a>
 
-              <p className="mt-5 max-w-sm text-sm leading-7 text-slate-400">
+              <p className="mt-5 max-w-sm text-sm leading-7 text-[#A9B7AA]">
                 {t.footer}
               </p>
             </div>
 
             <nav className="flex flex-wrap content-start gap-x-7 gap-y-4 text-sm">
-              <a href="/" className="text-slate-300 transition hover:text-white">
+              <a href="/" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
                 {t.home}
               </a>
-              <a href="/deals" className="text-slate-300 transition hover:text-white">
+              <a href="/deals" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
                 Deals
               </a>
-              <a href="/about" className="text-slate-300 transition hover:text-white">
+              <a href="/about" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
                 {t.about}
               </a>
-              <a href="/privacy" className="text-slate-300 transition hover:text-white">
+              <a href="/privacy" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
                 {t.privacy}
               </a>
-              <a href="/contact" className="text-slate-300 transition hover:text-white">
+              <a href="/contact" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
                 {t.contact}
               </a>
-              <a href="/terms" className="text-slate-300 transition hover:text-white">
+              <a href="/terms" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
                 {t.terms}
               </a>
             </nav>
           </div>
 
-          <div className="flex flex-col items-center justify-between gap-3 pt-7 text-xs text-slate-500 sm:flex-row">
+          <div className="flex flex-col items-center justify-between gap-3 pt-7 text-xs text-[#87958A] sm:flex-row">
             <p>© 2026 ALIQO. All rights reserved.</p>
             <p>Explore more. Discover more.</p>
           </div>
