@@ -287,9 +287,8 @@ export default function AdminPage() {
             className="mx-auto max-w-md space-y-5 rounded-2xl border border-amber-200 bg-white p-8 shadow-lg"
           >
             <h2 className="text-2xl font-bold text-green-900">
-              <Link
-                Admin Login
-            </h2>
+  Admin Login
+</h2>
 
             <input
               required
