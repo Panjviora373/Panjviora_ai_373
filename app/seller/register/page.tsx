@@ -64,11 +64,18 @@ export default function SellerRegisterPage() {
   }
 
   throw new Error(
+  `Supabase Signup Error (HTTP ${response.status}): ${
     data.msg ||
     data.message ||
     data.error_description ||
-    "Supabase did not confirm account creation. Please try again."
-  );
+    data.error ||
+    JSON.stringify({
+      hasUser: !!data.user,
+      hasUserId: !!data.user?.id,
+      responseFields: Object.keys(data),
+    })
+  }`
+);
 }
 
       setToken(data.access_token);
