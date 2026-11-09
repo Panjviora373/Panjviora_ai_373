@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-
+import Link from "next/link";
 type Request = {
   id?: number | string;
   business_name?: string;
@@ -287,6 +287,12 @@ export default function AdminPage() {
             className="mx-auto max-w-md space-y-5 rounded-2xl border border-amber-200 bg-white p-8 shadow-lg"
           >
             <h2 className="text-2xl font-bold text-green-900">
+              <Link
+  href="/admin/deals"
+  className="rounded-lg bg-amber-500 px-4 py-2 font-bold text-slate-950 hover:bg-amber-400"
+>
+  Manage Deals →
+</Link>
               Admin Login
             </h2>
 
