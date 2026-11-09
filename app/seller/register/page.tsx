@@ -55,12 +55,21 @@ export default function SellerRegisterPage() {
       }
 
       if (!data.access_token) {
-        setMessage(
-          "Account created! Please verify your email, then return here and login."
-        );
-        setMode("login");
-        return;
-      }
+  if (data.user?.id) {
+    setMessage(
+      "Account received. Email confirmation may be required. Please check your inbox and spam folder."
+    );
+    setMode("login");
+    return;
+  }
+
+  throw new Error(
+    data.msg ||
+    data.message ||
+    data.error_description ||
+    "Supabase did not confirm account creation. Please try again."
+  );
+}
 
       setToken(data.access_token);
       setMessage("Login successful! Now complete your seller registration.");
