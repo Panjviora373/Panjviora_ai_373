@@ -283,16 +283,15 @@ export default function AdminPage() {
 
         {!authenticated ? (
           <form
-            onSubmit={handleLogin}
-            className="mx-auto max-w-md space-y-5 rounded-2xl border border-amber-200 bg-white p-8 shadow-lg"
-          >
-            <h2 className="text-2xl font-bold text-green-900">
-  Admin Login
-</h2>
+  onSubmit={handleLogin}
+  className="mx-auto max-w-md space-y-5 rounded-2xl border border-amber-200 bg-white p-8 shadow-lg"
+>
+  <h2 className="text-2xl font-bold text-green-900">
+    Admin Login
+  </h2>
 
-            <input
-              required
-              type="email"
+  <input
+    required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Admin Email"
