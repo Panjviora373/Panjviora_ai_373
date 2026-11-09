@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 
 type SearchMode = "web" | "images" | "videos" | "ai";
 
@@ -10,12 +10,7 @@ type SearchResult = {
   url: string;
   content: string;
 };
-type ApprovedAd = {
-  id: number;
-  business_name: string;
-  advertising_details: string;
-  created_at: string;
-};
+
 type ImageResult = {
   url: string;
   thumbnail?: string;
@@ -158,23 +153,7 @@ const cardStyle =
 
 export default function Home() {
   const [query, setQuery] = useState("");
-  const [approvedAds, setApprovedAds] = useState<ApprovedAd[]>([]);
-
-useEffect(() => {
-  async function loadAds() {
-    try {
-      const response = await fetch("/api/ads");
-      if (!response.ok) return;
-
-      const data = await response.json();
-      setApprovedAds(Array.isArray(data.ads) ? data.ads : []);
-    } catch {
-      setApprovedAds([]);
-    }
-  }
-
-  loadAds();
-}, []);
+  
   const [language, setLanguage] = useState<"en" | "ur">("en");
   const [mode, setMode] = useState<SearchMode>("web");
 
