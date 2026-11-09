@@ -351,10 +351,11 @@ export default function Home() {
     EN
   </button>
 
-  <button type="button" onClick={() => setLanguage("ur")}>
+    <button type="button" onClick={() => setLanguage("ur")}>
     اردو
   </button>
-</div>
+          </div>
+        </div>
       </header>
 
       {/* Hero */}
