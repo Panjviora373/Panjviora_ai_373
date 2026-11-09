@@ -208,8 +208,7 @@ export default function SubmitDealPage() {
               Offer Valid Until (Optional)
               <input
                 type="date"
-                min={new Date().toISOString().split("T")[0]}
-                className={inputClass}
+                                className={inputClass}
                 value={form.valid_until}
                 onChange={(e) => updateField("valid_until", e.target.value)}
               />
