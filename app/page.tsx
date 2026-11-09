@@ -341,6 +341,12 @@ export default function Home() {
           <div className="flex items-center gap-2">
             <a
               href="/deals"
+              <a
+  href="/advertisements"
+  className="rounded-full border border-[#B9953B]/50 bg-[#D4AF37]/10 px-4 py-2 text-xs font-bold text-[#F0D77F] transition hover:bg-[#D4AF37]/20"
+>
+  Advertisements
+</a>
               className="rounded-full border border-[#B9953B]/50 bg-[#D4AF37]/10 px-4 py-2 text-xs font-bold text-[#F0D77F] transition hover:bg-[#D4AF37]/20"
             >
               Deals
@@ -737,26 +743,6 @@ export default function Home() {
 
       {/* Features */}
       
-{/* Approved Advertisements */}
-{approvedAds.length > 0 && (
-  <section className="bg-[#F3F6F1] px-5 py-12">
-    <div className="mx-auto max-w-6xl">
-      <div className="mb-8 text-center">
-        <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#A17C26]">
-          ALIQO BUSINESS PARTNERS
-        </span>
-        <h2 className="mt-3 text-3xl font-black text-[#10271D]">
-          Featured Advertisements
-        </h2>
-        <p className="mt-3 text-sm text-[#647468]">
-          Discover businesses featured on ALIQO.
-        </p>
-      </div>
-
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {approvedAds.map((ad) => (
-          <article
-            key={ad.id}
             className="rounded-3xl border border-[#D9E2D8] bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:border-[#C49A32] hover:shadow-xl"
           >
             <div className="mb-5 inline-flex rounded-full bg-[#F7F0D9] px-3 py-1 text-xs font-bold text-[#85631B]">
@@ -872,9 +858,16 @@ export default function Home() {
                 {t.home}
               </a>
               <a href="/deals" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-                Deals
-                <a
-  href="/advertise"
+  Deals
+</a>
+
+<a href="/advertisements" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+  Advertisements
+</a>
+
+<a href="/advertise" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+  Advertise With Us
+</a>  href="/advertise"
   className="text-[#C4D0C5] transition hover:text-[#E4C35D]"
 >
   Advertise With Us
