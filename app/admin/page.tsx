@@ -365,6 +365,12 @@ export default function AdminPage() {
   Manage Deals →
 </Link>
               <div className="flex gap-3">
+                <a
+  href="/admin/deals"
+  className="rounded-lg bg-yellow-500 px-4 py-2 font-semibold text-slate-950 hover:bg-yellow-400"
+>
+  Manage Deals
+</a>
                 <button
                   onClick={loadRequests}
                   disabled={loading}
