@@ -360,6 +360,12 @@ export default function AdminPage() {
 >
   Manage Deals →
 </Link>
+              <Link
+  href="/admin/sellers"
+  className="rounded-lg bg-green-700 px-4 py-2 font-bold text-white hover:bg-green-800"
+>
+  Manage Sellers →
+</Link>
               <div className="flex gap-3">
                 <a
   href="/admin/deals"
