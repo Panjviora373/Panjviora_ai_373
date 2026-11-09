@@ -347,13 +347,29 @@ export default function Home() {
     Advertisements
   </a>
 
-  <button type="button" onClick={() => setLanguage("en")}>
-    EN
-  </button>
+ <button
+  type="button"
+  onClick={() => setLanguage("en")}
+  className={`rounded-full px-3 py-2 text-xs font-bold transition ${
+    language === "en"
+      ? "bg-[#D4AF37] text-[#10271D]"
+      : "text-white hover:bg-white/10"
+  }`}
+>
+  EN
+</button>
 
-    <button type="button" onClick={() => setLanguage("ur")}>
-    اردو
-  </button>
+<button
+  type="button"
+  onClick={() => setLanguage("ur")}
+  className={`rounded-full px-3 py-2 text-xs font-bold transition ${
+    language === "ur"
+      ? "bg-[#D4AF37] text-[#10271D]"
+      : "text-white hover:bg-white/10"
+  }`}
+>
+  اردو
+</button>
           </div>
         </div>
       </header>
