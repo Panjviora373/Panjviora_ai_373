@@ -181,10 +181,7 @@ export default function SellerDashboard() {
 
             <p className="mt-5 text-center text-sm text-slate-400">
               New seller?{" "}
-              <a
-                href="/seller/register"
-                className="text-emerald-400"
-              >
+              <a href="/seller/register" className="text-emerald-400">
                 Register here
               </a>
             </p>
@@ -215,27 +212,22 @@ export default function SellerDashboard() {
                   <p className="text-sm text-slate-400">Business Name</p>
                   <p className="mt-1 font-semibold">{seller.business_name}</p>
                 </div>
-
                 <div>
                   <p className="text-sm text-slate-400">Owner Name</p>
                   <p className="mt-1 font-semibold">{seller.owner_name}</p>
                 </div>
-
                 <div>
                   <p className="text-sm text-slate-400">Email</p>
                   <p className="mt-1 font-semibold">{seller.email}</p>
                 </div>
-
                 <div>
                   <p className="text-sm text-slate-400">Phone</p>
                   <p className="mt-1 font-semibold">{seller.phone}</p>
                 </div>
-
                 <div>
                   <p className="text-sm text-slate-400">Category</p>
                   <p className="mt-1 font-semibold">{seller.category}</p>
                 </div>
-
                 <div>
                   <p className="text-sm text-slate-400">City</p>
                   <p className="mt-1 font-semibold">{seller.city}</p>
