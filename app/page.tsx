@@ -722,9 +722,7 @@ export default function Home() {
 
       {/* Features */}
       
-                      <h3 className="text-xl font-extrabold text-[#173B2B]">
-             )}
-
+                      
       <section className="border-y border-[#D9E2D8] bg-white px-5 py-20 sm:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="mx-auto mb-14 max-w-2xl text-center">
