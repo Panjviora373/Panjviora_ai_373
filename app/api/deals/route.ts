@@ -141,3 +141,43 @@ export async function POST(request: Request) {
     );
   }
 }
+export async function GET() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    return NextResponse.json(
+      { error: "Database configuration missing" },
+      { status: 500 }
+    );
+  }
+
+  try {
+    const response = await fetch(
+      `${supabaseUrl}/rest/v1/deals?select=id,business_name,title,description,category,offer_url,valid_until,created_at&status=eq.approved&order=created_at.desc`,
+      {
+        headers: {
+          apikey: supabaseKey,
+          Authorization: `Bearer ${supabaseKey}`,
+        },
+        cache: "no-store",
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      return NextResponse.json(
+        { error: "Unable to load deals" },
+        { status: response.status }
+      );
+    }
+
+    return NextResponse.json({ deals: data });
+  } catch {
+    return NextResponse.json(
+      { error: "Database connection failed" },
+      { status: 500 }
+    );
+  }
+}
