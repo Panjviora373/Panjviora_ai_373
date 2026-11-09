@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 type Request = {
   id?: number | string;
@@ -70,11 +70,7 @@ export default function AdminPage() {
     }
   }
 
-  useEffect(() => {
-    void loadRequests();
-  }, []);
-
-  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError("");
