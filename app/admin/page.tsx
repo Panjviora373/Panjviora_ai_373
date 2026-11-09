@@ -288,12 +288,7 @@ export default function AdminPage() {
           >
             <h2 className="text-2xl font-bold text-green-900">
               <Link
-  href="/admin/deals"
-  className="rounded-lg bg-amber-500 px-4 py-2 font-bold text-slate-950 hover:bg-amber-400"
->
-  Manage Deals →
-</Link>
-              Admin Login
+                Admin Login
             </h2>
 
             <input
@@ -365,7 +360,12 @@ export default function AdminPage() {
               <h2 className="text-2xl font-bold text-green-900">
                 Advertising Requests
               </h2>
-
+<Link
+  href="/admin/deals"
+  className="rounded-lg bg-amber-500 px-4 py-2 font-bold text-slate-950 hover:bg-amber-400"
+>
+  Manage Deals →
+</Link>
               <div className="flex gap-3">
                 <button
                   onClick={loadRequests}
