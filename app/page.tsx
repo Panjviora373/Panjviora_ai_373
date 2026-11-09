@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 
 type SearchMode = "web" | "images" | "videos" | "ai";
 
@@ -10,7 +10,12 @@ type SearchResult = {
   url: string;
   content: string;
 };
-
+type ApprovedAd = {
+  id: number;
+  business_name: string;
+  advertising_details: string;
+  created_at: string;
+};
 type ImageResult = {
   url: string;
   thumbnail?: string;
@@ -153,6 +158,23 @@ const cardStyle =
 
 export default function Home() {
   const [query, setQuery] = useState("");
+  const [approvedAds, setApprovedAds] = useState<ApprovedAd[]>([]);
+
+useEffect(() => {
+  async function loadAds() {
+    try {
+      const response = await fetch("/api/ads");
+      if (!response.ok) return;
+
+      const data = await response.json();
+      setApprovedAds(Array.isArray(data.ads) ? data.ads : []);
+    } catch {
+      setApprovedAds([]);
+    }
+  }
+
+  loadAds();
+}, []);
   const [language, setLanguage] = useState<"en" | "ur">("en");
   const [mode, setMode] = useState<SearchMode>("web");
 
@@ -735,6 +757,51 @@ export default function Home() {
       </section>
 
       {/* Features */}
+      
+{/* Approved Advertisements */}
+{approvedAds.length > 0 && (
+  <section className="bg-[#F3F6F1] px-5 py-12">
+    <div className="mx-auto max-w-6xl">
+      <div className="mb-8 text-center">
+        <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#A17C26]">
+          ALIQO BUSINESS PARTNERS
+        </span>
+        <h2 className="mt-3 text-3xl font-black text-[#10271D]">
+          Featured Advertisements
+        </h2>
+        <p className="mt-3 text-sm text-[#647468]">
+          Discover businesses featured on ALIQO.
+        </p>
+      </div>
+
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {approvedAds.map((ad) => (
+          <article
+            key={ad.id}
+            className="rounded-3xl border border-[#D9E2D8] bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:border-[#C49A32] hover:shadow-xl"
+          >
+            <div className="mb-5 inline-flex rounded-full bg-[#F7F0D9] px-3 py-1 text-xs font-bold text-[#85631B]">
+              Featured Business
+            </div>
+
+            <h3 className="text-xl font-extrabold text-[#173B2B]">
+              {ad.business_name}
+            </h3>
+
+            <p className="mt-4 whitespace-pre-wrap break-words text-sm leading-7 text-[#647468]">
+              {ad.advertising_details}
+            </p>
+
+            <div className="mt-6 border-t border-[#E5EBE3] pt-4 text-xs text-[#829084]">
+              Featured on ALIQO
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
       <section className="border-y border-[#D9E2D8] bg-white px-5 py-20 sm:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="mx-auto mb-14 max-w-2xl text-center">
