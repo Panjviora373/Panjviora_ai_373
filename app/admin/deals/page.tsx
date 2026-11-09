@@ -48,7 +48,7 @@ export default function AdminDealsPage() {
         throw new Error(data.error || "Unable to load deals.");
       }
 
-      setDeals(data.deals || []);
+     setDeals(Array.isArray(data) ? data : data.deals || []);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Something went wrong."
