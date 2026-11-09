@@ -339,44 +339,22 @@ export default function Home() {
           </a>
 
           <div className="flex items-center gap-2">
-            <a
-              href="/deals"
-              <a
-  href="/advertisements"
-  className="rounded-full border border-[#B9953B]/50 bg-[#D4AF37]/10 px-4 py-2 text-xs font-bold text-[#F0D77F] transition hover:bg-[#D4AF37]/20"
->
-  Advertisements
-</a>
-              className="rounded-full border border-[#B9953B]/50 bg-[#D4AF37]/10 px-4 py-2 text-xs font-bold text-[#F0D77F] transition hover:bg-[#D4AF37]/20"
-            >
-              Deals
-            </a>
+  <a href="/deals" className="rounded-full border border-[#B9953B]/50 bg-[#D4AF37]/10 px-4 py-2 text-xs font-bold text-[#F0D77F]">
+    Deals
+  </a>
 
-            <button
-              type="button"
-              onClick={() => setLanguage("en")}
-              className={`rounded-full px-3 py-2 text-xs font-bold transition ${
-                language === "en"
-                  ? "bg-[#D4AF37] text-[#10271D]"
-                  : "text-white hover:bg-white/10"
-              }`}
-            >
-              EN
-            </button>
+  <a href="/advertisements" className="rounded-full border border-[#B9953B]/50 bg-[#D4AF37]/10 px-4 py-2 text-xs font-bold text-[#F0D77F]">
+    Advertisements
+  </a>
 
-            <button
-              type="button"
-              onClick={() => setLanguage("ur")}
-              className={`rounded-full px-3 py-2 text-xs font-bold transition ${
-                language === "ur"
-                  ? "bg-[#D4AF37] text-[#10271D]"
-                  : "text-white hover:bg-white/10"
-              }`}
-            >
-              اردو
-            </button>
-          </div>
-        </div>
+  <button type="button" onClick={() => setLanguage("en")}>
+    EN
+  </button>
+
+  <button type="button" onClick={() => setLanguage("ur")}>
+    اردو
+  </button>
+</div>
       </header>
 
       {/* Hero */}
@@ -743,29 +721,8 @@ export default function Home() {
 
       {/* Features */}
       
-            className="rounded-3xl border border-[#D9E2D8] bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:border-[#C49A32] hover:shadow-xl"
-          >
-            <div className="mb-5 inline-flex rounded-full bg-[#F7F0D9] px-3 py-1 text-xs font-bold text-[#85631B]">
-              Featured Business
-            </div>
-
-            <h3 className="text-xl font-extrabold text-[#173B2B]">
-              {ad.business_name}
-            </h3>
-
-            <p className="mt-4 whitespace-pre-wrap break-words text-sm leading-7 text-[#647468]">
-              {ad.advertising_details}
-            </p>
-
-            <div className="mt-6 border-t border-[#E5EBE3] pt-4 text-xs text-[#829084]">
-              Featured on ALIQO
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-)}
+                      <h3 className="text-xl font-extrabold text-[#173B2B]">
+             )}
 
       <section className="border-y border-[#D9E2D8] bg-white px-5 py-20 sm:py-24">
         <div className="mx-auto max-w-6xl">
@@ -854,38 +811,38 @@ export default function Home() {
             </div>
 
             <nav className="flex flex-wrap content-start gap-x-7 gap-y-4 text-sm">
-              <a href="/" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-                {t.home}
-              </a>
-              <a href="/deals" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-  Deals
-</a>
+  <a href="/" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+    {t.home}
+  </a>
 
-<a href="/advertisements" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-  Advertisements
-</a>
+  <a href="/deals" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+    Deals
+  </a>
 
-<a href="/advertise" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-  Advertise With Us
-</a>  href="/advertise"
-  className="text-[#C4D0C5] transition hover:text-[#E4C35D]"
->
-  Advertise With Us
-</a>
-              </a>
-              <a href="/about" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-                {t.about}
-              </a>
-              <a href="/privacy" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-                {t.privacy}
-              </a>
-              <a href="/contact" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-                {t.contact}
-              </a>
-              <a href="/terms" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-                {t.terms}
-              </a>
-            </nav>
+  <a href="/advertisements" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+    Advertisements
+  </a>
+
+  <a href="/advertise" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+    Advertise With Us
+  </a>
+
+  <a href="/about" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+    {t.about}
+  </a>
+
+  <a href="/privacy" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+    {t.privacy}
+  </a>
+
+  <a href="/contact" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+    {t.contact}
+  </a>
+
+  <a href="/terms" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+    {t.terms}
+  </a>
+</nav>
           </div>
 
           <div className="flex flex-col items-center justify-between gap-3 pt-7 text-xs text-[#87958A] sm:flex-row">
