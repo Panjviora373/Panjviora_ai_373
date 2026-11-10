@@ -48,7 +48,7 @@ export default function AdminDealsPage() {
         throw new Error(data.error || "Unable to load deals.");
       }
 
-     setDeals(Array.isArray(data) ? data : data.deals || []);
+      setDeals(Array.isArray(data) ? data : data.deals || []);
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "Something went wrong."
@@ -136,26 +136,32 @@ export default function AdminDealsPage() {
 
   function statusStyle(status: Deal["status"]) {
     if (status === "approved") {
-      return "bg-green-100 text-green-800";
+      return "border border-green-500/40 bg-green-500/15 text-green-300";
     }
+
     if (status === "rejected") {
-      return "bg-red-100 text-red-800";
+      return "border border-red-500/40 bg-red-500/15 text-red-300";
     }
-    return "bg-amber-100 text-amber-800";
+
+    return "border border-[#D4AF37]/40 bg-[#D4AF37]/15 text-[#D4AF37]";
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 px-4 py-8 text-white sm:px-6">
+    <main className="min-h-screen bg-[#080D0A] px-4 py-8 text-[#F5F5F0] sm:px-6">
       <div className="mx-auto max-w-6xl">
+
+        {/* Header */}
         <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="font-bold tracking-widest text-amber-400">
+            <p className="font-bold tracking-[0.25em] text-[#D4AF37]">
               ALIQO ADMIN
             </p>
-            <h1 className="mt-2 text-3xl font-bold">
+
+            <h1 className="mt-2 text-3xl font-bold text-[#F5F5F0]">
               Deals Management
             </h1>
-            <p className="mt-2 text-slate-400">
+
+            <p className="mt-2 text-[#B8C2BA]">
               Review and manage submitted business offers.
             </p>
           </div>
@@ -163,62 +169,77 @@ export default function AdminDealsPage() {
           <div className="flex flex-wrap gap-3">
             <Link
               href="/admin"
-              className="rounded-lg border border-white/20 px-4 py-2 font-semibold hover:bg-white/10"
+              className="rounded-lg border border-[#D4AF37]/50 px-4 py-2 font-semibold text-[#D4AF37] transition hover:bg-[#123D2B]"
             >
               ← Main Dashboard
             </Link>
 
             <button
               onClick={loadDeals}
-              className="rounded-lg bg-amber-500 px-4 py-2 font-bold text-slate-950 hover:bg-amber-400"
+              className="rounded-lg bg-[#D4AF37] px-5 py-2 font-bold text-[#080D0A] transition hover:bg-[#E6C65A]"
             >
               Refresh
             </button>
           </div>
         </div>
 
+        {/* Statistics */}
         <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-5">
-            <p className="text-sm text-slate-400">Total Deals</p>
-            <p className="mt-2 text-3xl font-bold">{deals.length}</p>
+          <div className="rounded-2xl border border-[#D4AF37]/30 bg-[#123D2B] p-5">
+            <p className="text-sm text-[#E5DDBD]">Total Deals</p>
+            <p className="mt-2 text-3xl font-bold text-[#D4AF37]">
+              {deals.length}
+            </p>
           </div>
 
-          <div className="rounded-2xl border border-amber-500/20 bg-amber-500/10 p-5">
-            <p className="text-sm text-amber-300">Pending</p>
-            <p className="mt-2 text-3xl font-bold">{pending}</p>
+          <div className="rounded-2xl border border-[#D4AF37]/30 bg-[#101813] p-5">
+            <p className="text-sm text-[#D4AF37]">Pending</p>
+            <p className="mt-2 text-3xl font-bold text-[#D4AF37]">
+              {pending}
+            </p>
           </div>
 
-          <div className="rounded-2xl border border-green-500/20 bg-green-500/10 p-5">
+          <div className="rounded-2xl border border-green-500/30 bg-[#101813] p-5">
             <p className="text-sm text-green-300">Approved</p>
-            <p className="mt-2 text-3xl font-bold">{approved}</p>
+            <p className="mt-2 text-3xl font-bold text-green-300">
+              {approved}
+            </p>
           </div>
 
-          <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-5">
+          <div className="rounded-2xl border border-red-500/30 bg-[#101813] p-5">
             <p className="text-sm text-red-300">Rejected</p>
-            <p className="mt-2 text-3xl font-bold">{rejected}</p>
+            <p className="mt-2 text-3xl font-bold text-red-300">
+              {rejected}
+            </p>
           </div>
         </div>
 
+        {/* Error Message */}
         {error && (
-          <div className="mb-6 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-red-300">
+          <div className="mb-6 rounded-xl border border-red-500/40 bg-red-500/10 p-4 text-red-300">
             {error}
+
             <p className="mt-2">
-              <Link href="/admin" className="font-bold underline">
+              <Link
+                href="/admin"
+                className="font-bold text-[#D4AF37] underline"
+              >
                 Go to Admin Login
               </Link>
             </p>
           </div>
         )}
 
+        {/* Deals Filter */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-          <h2 className="text-xl font-bold text-amber-400">
+          <h2 className="text-xl font-bold text-[#D4AF37]">
             Submitted Deals
           </h2>
 
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="rounded-lg border border-white/20 bg-slate-900 px-4 py-2 text-white"
+            className="rounded-lg border border-[#D4AF37]/50 bg-[#101813] px-4 py-2 text-[#F5F5F0] outline-none focus:border-[#D4AF37]"
           >
             <option value="all">All Deals</option>
             <option value="pending">Pending</option>
@@ -227,14 +248,18 @@ export default function AdminDealsPage() {
           </select>
         </div>
 
+        {/* Deals List */}
         {loading ? (
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-10 text-center text-slate-300">
+          <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#101813] p-10 text-center text-[#D4AF37]">
             Loading deals...
           </div>
         ) : filteredDeals.length === 0 ? (
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-10 text-center">
-            <p className="text-lg font-semibold">No deals found.</p>
-            <p className="mt-2 text-sm text-slate-400">
+          <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#101813] p-10 text-center">
+            <p className="text-lg font-semibold text-[#F5F5F0]">
+              No deals found.
+            </p>
+
+            <p className="mt-2 text-sm text-[#B8C2BA]">
               Submitted offers will appear here.
             </p>
           </div>
@@ -243,14 +268,15 @@ export default function AdminDealsPage() {
             {filteredDeals.map((deal) => (
               <article
                 key={deal.id}
-                className="rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6"
+                className="rounded-2xl border border-[#D4AF37]/25 bg-[#101813] p-5 shadow-lg shadow-black/20 transition hover:border-[#D4AF37]/60 sm:p-6"
               >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-amber-400">
+                    <p className="text-sm font-semibold text-[#D4AF37]">
                       {deal.business_name} · {deal.category}
                     </p>
-                    <h3 className="mt-2 text-xl font-bold">
+
+                    <h3 className="mt-2 text-xl font-bold text-[#F5F5F0]">
                       {deal.title}
                     </h3>
                   </div>
@@ -264,47 +290,51 @@ export default function AdminDealsPage() {
                   </span>
                 </div>
 
-                <p className="mt-4 whitespace-pre-wrap leading-7 text-slate-300">
+                <p className="mt-4 whitespace-pre-wrap leading-7 text-[#D0D8D1]">
                   {deal.description}
                 </p>
 
-                <div className="mt-5 grid gap-2 text-sm text-slate-400 sm:grid-cols-2">
+                <div className="mt-5 grid gap-3 rounded-xl border border-[#D4AF37]/15 bg-[#123D2B]/50 p-4 text-sm text-[#D0D8D1] sm:grid-cols-2">
                   <p>
-                    <strong className="text-white">Contact:</strong>{" "}
+                    <strong className="text-[#D4AF37]">Contact:</strong>{" "}
                     {deal.contact_name}
                   </p>
+
                   <p>
-                    <strong className="text-white">Email:</strong>{" "}
+                    <strong className="text-[#D4AF37]">Email:</strong>{" "}
                     {deal.email}
                   </p>
+
                   <p>
-                    <strong className="text-white">Valid Until:</strong>{" "}
+                    <strong className="text-[#D4AF37]">Valid Until:</strong>{" "}
                     {deal.valid_until || "Not specified"}
                   </p>
+
                   <p>
-                    <strong className="text-white">Submitted:</strong>{" "}
+                    <strong className="text-[#D4AF37]">Submitted:</strong>{" "}
                     {new Date(deal.created_at).toLocaleString()}
                   </p>
                 </div>
 
                 {deal.offer_url && (
-                  <p className="mt-3 break-all text-sm">
+                  <p className="mt-4 break-all text-sm">
                     <a
                       href={deal.offer_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-amber-400 underline"
+                      className="font-semibold text-[#D4AF37] underline hover:text-[#E6C65A]"
                     >
                       Visit Offer Website
                     </a>
                   </p>
                 )}
 
-                <div className="mt-6 flex flex-wrap gap-3 border-t border-white/10 pt-5">
+                {/* Actions */}
+                <div className="mt-6 flex flex-wrap gap-3 border-t border-[#D4AF37]/20 pt-5">
                   <button
                     disabled={updatingId === deal.id}
                     onClick={() => updateStatus(deal.id, "approved")}
-                    className="rounded-lg bg-green-600 px-4 py-2 font-bold text-white hover:bg-green-500 disabled:opacity-50"
+                    className="rounded-lg bg-[#D4AF37] px-5 py-2 font-bold text-[#080D0A] transition hover:bg-[#E6C65A] disabled:opacity-50"
                   >
                     {updatingId === deal.id ? "Updating..." : "Approve"}
                   </button>
@@ -312,7 +342,7 @@ export default function AdminDealsPage() {
                   <button
                     disabled={updatingId === deal.id}
                     onClick={() => updateStatus(deal.id, "rejected")}
-                    className="rounded-lg bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-500 disabled:opacity-50"
+                    className="rounded-lg border border-red-500/50 bg-red-500/10 px-5 py-2 font-bold text-red-300 transition hover:bg-red-500/20 disabled:opacity-50"
                   >
                     Reject
                   </button>
@@ -320,7 +350,7 @@ export default function AdminDealsPage() {
                   <button
                     disabled={deletingId === deal.id}
                     onClick={() => deleteDeal(deal.id)}
-                    className="rounded-lg border border-red-500/50 px-4 py-2 font-bold text-red-300 hover:bg-red-500/10 disabled:opacity-50"
+                    className="rounded-lg border border-red-500/50 px-5 py-2 font-bold text-red-300 transition hover:bg-red-500/10 disabled:opacity-50"
                   >
                     {deletingId === deal.id ? "Deleting..." : "Delete"}
                   </button>
