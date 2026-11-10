@@ -63,23 +63,32 @@ export default function SellerRegisterPage() {
     return;
   }
 
-  throw new Error(
-  `Supabase Signup Error (HTTP ${response.status}): ${
-    data.msg ||
-    data.message ||
-    data.error_description ||
-    data.error ||
-    JSON.stringify({
-      hasUser: !!data.user,
-      hasUserId: !!data.user?.id,
-      responseFields: Object.keys(data),
-    })
-  }`
-);
+ 
+if (data.access_token) {
+  setToken(data.access_token);
+  setMessage(
+    mode === "login"
+      ? "Login successful! Now complete your seller registration."
+      : "Account created successfully! You can now complete your seller registration."
+  );
+  return;
 }
 
-      setToken(data.access_token);
-      setMessage("Login successful! Now complete your seller registration.");
+if (mode === "signup" && (data.id || data.user?.id)) {
+  setMessage(
+    "Your account has been created. Please check your email inbox and spam folder for the confirmation link. After confirming your email, return here and login."
+  );
+  setMode("login");
+  return;
+}
+
+throw new Error(
+  data.msg ||
+    data.message ||
+    data.error_description ||
+    "Authentication successful, but no access token was returned. Please try logging in."
+);
+
     } catch (error) {
       setMessage(
         error instanceof Error ? error.message : "Something went wrong"
