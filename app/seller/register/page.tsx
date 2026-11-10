@@ -19,84 +19,71 @@ export default function SellerRegisterPage() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-  async function handleAuth(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
+  
+async function handleAuth(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+  setLoading(true);
+  setMessage("");
 
-    try {
-      if (!supabaseUrl || !supabaseKey) {
-        throw new Error("Database configuration missing");
-      }
-
-      const url =
-        mode === "signup"
-          ? `${supabaseUrl}/auth/v1/signup`
-          : `${supabaseUrl}/auth/v1/token?grant_type=password`;
-
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          apikey: supabaseKey,
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.msg ||
-            data.message ||
-            data.error_description ||
-            "Authentication failed"
-        );
-      }
-
-      if (!data.access_token) {
-  if (data.user?.id) {
-    setMessage(
-      "Account received. Email confirmation may be required. Please check your inbox and spam folder."
-    );
-    setMode("login");
-    return;
-  }
-
- 
-if (data.access_token) {
-  setToken(data.access_token);
-  setMessage(
-    mode === "login"
-      ? "Login successful! Now complete your seller registration."
-      : "Account created successfully! You can now complete your seller registration."
-  );
-  return;
-}
-
-if (mode === "signup" && (data.id || data.user?.id)) {
-  setMessage(
-    "Your account has been created. Please check your email inbox and spam folder for the confirmation link. After confirming your email, return here and login."
-  );
-  setMode("login");
-  return;
-}
-
-throw new Error(
-  data.msg ||
-    data.message ||
-    data.error_description ||
-    "Authentication successful, but no access token was returned. Please try logging in."
-);
-
-    } catch (error) {
-      setMessage(
-        error instanceof Error ? error.message : "Something went wrong"
-      );
-    } finally {
-      setLoading(false);
+  try {
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error("Database configuration missing");
     }
+
+    const url =
+      mode === "signup"
+        ? `${supabaseUrl}/auth/v1/signup`
+        : `${supabaseUrl}/auth/v1/token?grant_type=password`;
+
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        apikey: supabaseKey,
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.msg ||
+          data.message ||
+          data.error_description ||
+          "Authentication failed"
+      );
+    }
+
+    if (data.access_token) {
+      setToken(data.access_token);
+      setMessage(
+        mode === "login"
+          ? "Login successful! Now complete your seller registration."
+          : "Account created successfully! Now complete your seller registration."
+      );
+      return;
+    }
+
+    if (mode === "signup" && (data.id || data.user?.id)) {
+      setMessage(
+        "Account created! Please check your email for confirmation, then login."
+      );
+      setMode("login");
+      return;
+    }
+
+    throw new Error(
+      "No access token received. Please confirm your email or try logging in."
+    );
+  } catch (error) {
+    setMessage(
+      error instanceof Error ? error.message : "Something went wrong"
+    );
+  } finally {
+    setLoading(false);
   }
+}
 
   async function handleRegistration(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
