@@ -3,6 +3,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+
 type Request = {
   id?: number | string;
   business_name?: string;
@@ -51,6 +52,7 @@ export default function AdminPage() {
       if (!response.ok) {
         setAuthenticated(false);
         setRequests([]);
+
         if (response.status !== 401) {
           throw new Error("Could not load advertising requests.");
         }
@@ -70,7 +72,7 @@ export default function AdminPage() {
     }
   }
 
-    async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setError("");
@@ -226,10 +228,15 @@ export default function AdminPage() {
   function statusStyle(status?: string) {
     const value = normalizeStatus(status);
 
-    if (value === "Approved") return "bg-green-100 text-green-800";
-    if (value === "Rejected") return "bg-red-100 text-red-700";
+    if (value === "Approved") {
+      return "border border-green-500/30 bg-green-500/15 text-green-300";
+    }
 
-    return "bg-amber-100 text-amber-800";
+    if (value === "Rejected") {
+      return "border border-red-500/30 bg-red-500/15 text-red-300";
+    }
+
+    return "border border-[#D4AF37]/30 bg-[#D4AF37]/15 text-[#D4AF37]";
   }
 
   const pendingCount = requests.filter(
@@ -264,34 +271,38 @@ export default function AdminPage() {
   }, [requests, search, filter]);
 
   return (
-    <main className="min-h-screen bg-[#f8f7f2] px-4 py-10 text-slate-900 sm:px-6">
+    <main className="min-h-screen bg-[#080D0A] px-4 py-10 text-[#F5F5F0] sm:px-6">
       <div className="mx-auto max-w-6xl">
+
         <header className="mb-10 text-center">
           <h1 className="text-4xl font-black tracking-tight">
-            ALI<span className="text-amber-500">QO</span>{" "}
-            <span className="text-green-800">Admin</span>
+            ALI<span className="text-[#D4AF37]">QO</span>{" "}
+            <span className="text-[#D4AF37]">Admin</span>
           </h1>
-          <p className="mt-3 text-slate-500">
+
+          <p className="mt-3 text-gray-400">
             Professional Advertising Management Dashboard
           </p>
-          <div className="mx-auto mt-4 h-1 w-24 rounded-full bg-amber-400" />
+
+          <div className="mx-auto mt-4 h-1 w-24 rounded-full bg-[#D4AF37]" />
         </header>
 
         {!authenticated ? (
           <form
-  onSubmit={handleLogin}
-  className="mx-auto max-w-md space-y-5 rounded-2xl border border-amber-200 bg-white p-8 shadow-lg"
->
-  <h2 className="text-2xl font-bold text-green-900">
-    Admin Login
-  </h2>
+            onSubmit={handleLogin}
+            className="mx-auto max-w-md space-y-5 rounded-2xl border border-[#D4AF37]/40 bg-[#101813] p-8 shadow-xl"
+          >
+            <h2 className="text-2xl font-bold text-[#D4AF37]">
+              Admin Login
+            </h2>
 
-  <input
-    required
+            <input
+              required
+              type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Admin Email"
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 p-3 outline-none focus:border-amber-500"
+              className="w-full rounded-lg border border-[#D4AF37]/30 bg-[#080D0A] p-3 text-[#F5F5F0] outline-none placeholder:text-gray-500 focus:border-[#D4AF37]"
             />
 
             <input
@@ -300,90 +311,88 @@ export default function AdminPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="w-full rounded-lg border border-slate-200 bg-slate-50 p-3 outline-none focus:border-amber-500"
+              className="w-full rounded-lg border border-[#D4AF37]/30 bg-[#080D0A] p-3 text-[#F5F5F0] outline-none placeholder:text-gray-500 focus:border-[#D4AF37]"
             />
 
             {error && (
-              <p className="break-words text-sm text-red-600">{error}</p>
+              <p className="break-words text-sm text-red-400">{error}</p>
             )}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-lg bg-green-800 p-3 font-bold text-white transition hover:bg-green-900 disabled:opacity-50"
+              className="w-full rounded-lg bg-[#D4AF37] p-3 font-bold text-[#080D0A] transition hover:bg-[#E5C65B] disabled:opacity-50"
             >
               {loading ? "Please wait..." : "Secure Admin Login"}
             </button>
           </form>
         ) : (
           <section>
+
             <div className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 {
                   label: "Total Requests",
                   count: requests.length,
-                  style: "border-amber-300 text-slate-900",
                 },
                 {
                   label: "Pending",
                   count: pendingCount,
-                  style: "border-amber-300 text-amber-700",
                 },
                 {
                   label: "Approved",
                   count: approvedCount,
-                  style: "border-green-300 text-green-800",
                 },
                 {
                   label: "Rejected",
                   count: rejectedCount,
-                  style: "border-red-200 text-red-700",
                 },
               ].map((stat) => (
                 <div
                   key={stat.label}
-                  className={`rounded-xl border bg-white p-5 shadow-sm ${stat.style}`}
+                  className="rounded-xl border border-[#D4AF37]/30 bg-[#123D2B] p-5 shadow-lg"
                 >
-                  <p className="text-sm font-semibold">{stat.label}</p>
-                  <p className="mt-2 text-3xl font-black">{stat.count}</p>
+                  <p className="text-sm font-semibold text-gray-300">
+                    {stat.label}
+                  </p>
+                  <p className="mt-2 text-3xl font-black text-[#D4AF37]">
+                    {stat.count}
+                  </p>
                 </div>
               ))}
             </div>
 
-            <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-              <h2 className="text-2xl font-bold text-green-900">
+            <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
+              <h2 className="text-2xl font-bold text-[#D4AF37]">
                 Advertising Requests
               </h2>
-<Link
-  href="/admin/deals"
-  className="rounded-lg bg-amber-500 px-4 py-2 font-bold text-slate-950 hover:bg-amber-400"
->
-  Manage Deals →
-</Link>
-              <Link
-  href="/admin/sellers"
-  className="rounded-lg bg-green-700 px-4 py-2 font-bold text-white hover:bg-green-800"
->
-  Manage Sellers →
-</Link>
-              <div className="flex gap-3">
-                <a
-  href="/admin/deals"
-  className="rounded-lg bg-yellow-500 px-4 py-2 font-semibold text-slate-950 hover:bg-yellow-400"
->
-  Manage Deals
-</a>
+
+              <div className="flex flex-wrap gap-3">
+                <Link
+                  href="/admin/deals"
+                  className="rounded-lg bg-[#D4AF37] px-4 py-2 font-bold text-[#080D0A] transition hover:bg-[#E5C65B]"
+                >
+                  Manage Deals →
+                </Link>
+
+                <Link
+                  href="/admin/sellers"
+                  className="rounded-lg bg-[#123D2B] px-4 py-2 font-bold text-[#F5F5F0] transition hover:bg-[#1B563D]"
+                >
+                  Manage Sellers →
+                </Link>
+
                 <button
                   onClick={loadRequests}
                   disabled={loading}
-                  className="rounded-lg bg-green-800 px-4 py-2 font-semibold text-white hover:bg-green-900 disabled:opacity-50"
+                  className="rounded-lg border border-[#D4AF37]/50 bg-[#101813] px-4 py-2 font-semibold text-[#D4AF37] transition hover:bg-[#123D2B] disabled:opacity-50"
                 >
                   {loading ? "Loading..." : "Refresh"}
                 </button>
 
                 <button
                   onClick={handleLogout}
-                  className="rounded-lg bg-amber-500 px-4 py-2 font-semibold text-slate-950 hover:bg-amber-400"
+                  className="rounded-lg border border-[#D4AF37]/50 bg-[#D4AF37] px-4 py-2 font-semibold text-[#080D0A] transition hover:bg-[#E5C65B]"
                 >
                   Logout
                 </button>
@@ -391,7 +400,7 @@ export default function AdminPage() {
             </div>
 
             {error && (
-              <p className="mb-5 break-words rounded-lg bg-red-50 p-4 text-red-700">
+              <p className="mb-5 break-words rounded-lg border border-red-500/30 bg-red-500/10 p-4 text-red-300">
                 ⚠ {error}
               </p>
             )}
@@ -401,13 +410,13 @@ export default function AdminPage() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search business, name, email or phone..."
-                className="w-full rounded-lg border border-amber-200 bg-white p-3 outline-none focus:border-amber-500"
+                className="w-full rounded-lg border border-[#D4AF37]/30 bg-[#101813] p-3 text-[#F5F5F0] outline-none placeholder:text-gray-500 focus:border-[#D4AF37]"
               />
 
               <select
                 value={filter}
                 onChange={(e) => setFilter(e.target.value as StatusFilter)}
-                className="w-full rounded-lg border border-amber-200 bg-white p-3 outline-none focus:border-amber-500"
+                className="w-full rounded-lg border border-[#D4AF37]/30 bg-[#101813] p-3 text-[#F5F5F0] outline-none focus:border-[#D4AF37]"
               >
                 <option value="All">All Requests</option>
                 <option value="Pending">Pending</option>
@@ -416,12 +425,12 @@ export default function AdminPage() {
               </select>
             </div>
 
-            <p className="mb-4 text-sm text-slate-500">
+            <p className="mb-4 text-sm text-gray-400">
               Showing {filteredRequests.length} of {requests.length} requests
             </p>
 
             {filteredRequests.length === 0 ? (
-              <div className="rounded-xl border border-amber-200 bg-white p-8 text-center text-slate-500">
+              <div className="rounded-xl border border-[#D4AF37]/30 bg-[#101813] p-8 text-center text-gray-400">
                 No matching advertising requests found.
               </div>
             ) : (
@@ -432,10 +441,10 @@ export default function AdminPage() {
                   return (
                     <article
                       key={item.id ?? index}
-                      className="rounded-xl border border-amber-200 bg-white p-6 shadow-sm"
+                      className="rounded-xl border border-[#D4AF37]/30 bg-[#101813] p-6 shadow-xl transition hover:border-[#D4AF37]/60"
                     >
                       <div className="flex flex-wrap items-center justify-between gap-3">
-                        <h3 className="text-xl font-bold text-green-800">
+                        <h3 className="text-xl font-bold text-[#D4AF37]">
                           {item.business_name || "Business"}
                         </h3>
 
@@ -446,32 +455,35 @@ export default function AdminPage() {
                         </span>
                       </div>
 
-                      <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                      <div className="mt-5 grid gap-3 text-[#F5F5F0] sm:grid-cols-2">
                         <p>
-                          <span className="text-slate-500">Contact:</span>{" "}
+                          <span className="text-gray-400">Contact:</span>{" "}
                           {item.contact_name || "—"}
                         </p>
+
                         <p>
-                          <span className="text-slate-500">Email:</span>{" "}
+                          <span className="text-gray-400">Email:</span>{" "}
                           {item.email || "—"}
                         </p>
+
                         <p>
-                          <span className="text-slate-500">Phone:</span>{" "}
+                          <span className="text-gray-400">Phone:</span>{" "}
                           {item.phone || "—"}
                         </p>
                       </div>
 
-                      <div className="mt-4 rounded-lg bg-[#f8f7f2] p-4">
-                        <p className="mb-2 font-bold text-green-900">
+                      <div className="mt-4 rounded-lg border border-[#D4AF37]/20 bg-[#123D2B] p-4">
+                        <p className="mb-2 font-bold text-[#D4AF37]">
                           Advertising Details
                         </p>
-                        <p className="whitespace-pre-wrap text-slate-600">
+
+                        <p className="whitespace-pre-wrap text-gray-200">
                           {item.advertising_details || "—"}
                         </p>
                       </div>
 
                       {item.created_at && (
-                        <p className="mt-4 text-xs text-slate-500">
+                        <p className="mt-4 text-xs text-gray-400">
                           Submitted:{" "}
                           {new Date(item.created_at).toLocaleString()}
                         </p>
@@ -480,7 +492,7 @@ export default function AdminPage() {
                       <div className="mt-5 flex flex-wrap gap-3">
                         <button
                           onClick={() => setSelected(item)}
-                          className="rounded-lg bg-slate-800 px-4 py-2 font-semibold text-white hover:bg-slate-900"
+                          className="rounded-lg border border-[#D4AF37]/40 bg-[#123D2B] px-4 py-2 font-semibold text-[#F5F5F0] transition hover:bg-[#1B563D]"
                         >
                           View Details
                         </button>
@@ -490,7 +502,7 @@ export default function AdminPage() {
                           disabled={
                             updatingId === item.id || status === "Approved"
                           }
-                          className="rounded-lg bg-green-700 px-4 py-2 font-semibold text-white hover:bg-green-800 disabled:opacity-40"
+                          className="rounded-lg bg-[#D4AF37] px-4 py-2 font-semibold text-[#080D0A] transition hover:bg-[#E5C65B] disabled:opacity-40"
                         >
                           {updatingId === item.id ? "Updating..." : "Approve"}
                         </button>
@@ -500,7 +512,7 @@ export default function AdminPage() {
                           disabled={
                             updatingId === item.id || status === "Rejected"
                           }
-                          className="rounded-lg bg-red-600 px-4 py-2 font-semibold text-white hover:bg-red-700 disabled:opacity-40"
+                          className="rounded-lg bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-500 disabled:opacity-40"
                         >
                           Reject
                         </button>
@@ -509,7 +521,7 @@ export default function AdminPage() {
                           href={getWhatsAppLink(item.phone)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="rounded-lg bg-emerald-700 px-4 py-2 font-semibold text-white hover:bg-emerald-800"
+                          className="rounded-lg bg-[#123D2B] px-4 py-2 font-semibold text-[#F5F5F0] transition hover:bg-[#1B563D]"
                         >
                           Contact on WhatsApp
                         </a>
@@ -517,7 +529,7 @@ export default function AdminPage() {
                         <button
                           onClick={() => deleteRequest(item)}
                           disabled={deletingId === item.id}
-                          className="rounded-lg border border-red-400 px-4 py-2 font-semibold text-red-600 hover:bg-red-50 disabled:opacity-40"
+                          className="rounded-lg border border-red-500/50 px-4 py-2 font-semibold text-red-400 transition hover:bg-red-500/10 disabled:opacity-40"
                         >
                           {deletingId === item.id ? "Deleting..." : "Delete"}
                         </button>
@@ -529,15 +541,16 @@ export default function AdminPage() {
             )}
 
             {selected && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
-                <div className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-amber-300 bg-white p-6">
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+                <div className="max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-[#D4AF37]/50 bg-[#101813] p-6 text-[#F5F5F0] shadow-2xl">
                   <div className="mb-5 flex items-center justify-between gap-3">
-                    <h2 className="text-xl font-bold text-green-900">
+                    <h2 className="text-xl font-bold text-[#D4AF37]">
                       Request Details
                     </h2>
+
                     <button
                       onClick={() => setSelected(null)}
-                      className="rounded-lg bg-green-800 px-3 py-2 text-white"
+                      className="rounded-lg bg-[#D4AF37] px-3 py-2 font-semibold text-[#080D0A] transition hover:bg-[#E5C65B]"
                     >
                       Close
                     </button>
@@ -545,32 +558,43 @@ export default function AdminPage() {
 
                   <div className="space-y-4 text-sm">
                     <p>
-                      <strong>Business:</strong>{" "}
+                      <strong className="text-[#D4AF37]">Business:</strong>{" "}
                       {selected.business_name || "—"}
                     </p>
+
                     <p>
-                      <strong>Contact:</strong>{" "}
+                      <strong className="text-[#D4AF37]">Contact:</strong>{" "}
                       {selected.contact_name || "—"}
                     </p>
+
                     <p>
-                      <strong>Email:</strong> {selected.email || "—"}
+                      <strong className="text-[#D4AF37]">Email:</strong>{" "}
+                      {selected.email || "—"}
                     </p>
+
                     <p>
-                      <strong>Phone:</strong> {selected.phone || "—"}
+                      <strong className="text-[#D4AF37]">Phone:</strong>{" "}
+                      {selected.phone || "—"}
                     </p>
+
                     <p>
-                      <strong>Status:</strong>{" "}
+                      <strong className="text-[#D4AF37]">Status:</strong>{" "}
                       {normalizeStatus(selected.status)}
                     </p>
+
                     <div>
-                      <strong>Advertising Details:</strong>
-                      <p className="mt-2 whitespace-pre-wrap text-slate-600">
+                      <strong className="text-[#D4AF37]">
+                        Advertising Details:
+                      </strong>
+
+                      <p className="mt-2 whitespace-pre-wrap text-gray-300">
                         {selected.advertising_details || "—"}
                       </p>
                     </div>
+
                     {selected.created_at && (
                       <p>
-                        <strong>Submitted:</strong>{" "}
+                        <strong className="text-[#D4AF37]">Submitted:</strong>{" "}
                         {new Date(selected.created_at).toLocaleString()}
                       </p>
                     )}
@@ -578,6 +602,7 @@ export default function AdminPage() {
                 </div>
               </div>
             )}
+
           </section>
         )}
       </div>
