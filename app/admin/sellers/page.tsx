@@ -96,36 +96,42 @@ export default function AdminSellersPage() {
       : sellers.filter((s) => s.status === filter);
 
   const statusStyle = {
-    pending: "bg-amber-500/10 text-amber-400",
-    approved: "bg-emerald-500/10 text-emerald-400",
-    rejected: "bg-red-500/10 text-red-400",
+    pending: "bg-[#D4AF37]/15 text-[#D4AF37] border border-[#D4AF37]/30",
+    approved: "bg-green-500/15 text-green-300 border border-green-500/30",
+    rejected: "bg-red-500/15 text-red-300 border border-red-500/30",
   };
 
   return (
-    <main className="min-h-screen bg-slate-950 px-5 py-10 text-white">
+    <main className="min-h-screen bg-[#080D0A] px-5 py-10 text-[#F5F5F0]">
       <div className="mx-auto max-w-6xl">
-        <a href="/admin" className="text-3xl font-bold text-emerald-400">
+
+        <a
+          href="/admin"
+          className="text-3xl font-extrabold tracking-wide text-[#D4AF37]"
+        >
           ALIQO
         </a>
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Seller Applications</h1>
-            <p className="mt-2 text-slate-400">
+            <h1 className="text-3xl font-bold text-[#F5F5F0]">
+              Seller Applications
+            </h1>
+            <p className="mt-2 text-gray-400">
               Manage and review seller registration requests.
             </p>
           </div>
 
           <button
             onClick={loadSellers}
-            className="rounded-lg border border-white/20 px-5 py-2 hover:bg-white/10"
+            className="rounded-lg border border-[#D4AF37]/50 px-5 py-2 font-semibold text-[#D4AF37] transition hover:bg-[#D4AF37] hover:text-[#080D0A]"
           >
             Refresh
           </button>
         </div>
 
         {message && (
-          <div className="mt-6 rounded-lg bg-emerald-500/10 p-4 text-emerald-300">
+          <div className="mt-6 rounded-lg border border-[#D4AF37]/30 bg-[#123D2B] p-4 text-[#F5F5F0]">
             {message}
           </div>
         )}
@@ -139,10 +145,12 @@ export default function AdminSellersPage() {
           ].map((item) => (
             <div
               key={item.label}
-              className="rounded-xl border border-white/10 bg-slate-900 p-5"
+              className="rounded-xl border border-[#D4AF37]/25 bg-[#123D2B] p-5 shadow-lg"
             >
-              <p className="text-sm text-slate-400">{item.label}</p>
-              <p className="mt-2 text-3xl font-bold">{item.value}</p>
+              <p className="text-sm text-gray-300">{item.label}</p>
+              <p className="mt-2 text-3xl font-bold text-[#D4AF37]">
+                {item.value}
+              </p>
             </div>
           ))}
         </div>
@@ -152,10 +160,10 @@ export default function AdminSellersPage() {
             <button
               key={item}
               onClick={() => setFilter(item)}
-              className={`rounded-lg px-4 py-2 text-sm font-semibold capitalize ${
+              className={`rounded-lg border px-4 py-2 text-sm font-semibold capitalize transition ${
                 filter === item
-                  ? "bg-emerald-500 text-slate-950"
-                  : "bg-slate-800 text-white"
+                  ? "border-[#D4AF37] bg-[#D4AF37] text-[#080D0A]"
+                  : "border-[#D4AF37]/30 bg-[#123D2B] text-[#F5F5F0] hover:border-[#D4AF37] hover:text-[#D4AF37]"
               }`}
             >
               {item}
@@ -165,25 +173,25 @@ export default function AdminSellersPage() {
 
         <div className="mt-6 space-y-4">
           {loading ? (
-            <p className="py-10 text-center text-slate-400">
+            <p className="py-10 text-center text-gray-400">
               Loading seller applications...
             </p>
           ) : visibleSellers.length === 0 ? (
-            <div className="rounded-xl border border-white/10 bg-slate-900 p-10 text-center text-slate-400">
+            <div className="rounded-xl border border-[#D4AF37]/25 bg-[#123D2B] p-10 text-center text-gray-300">
               No seller applications found.
             </div>
           ) : (
             visibleSellers.map((seller) => (
               <div
                 key={seller.user_id}
-                className="rounded-xl border border-white/10 bg-slate-900 p-6"
+                className="rounded-xl border border-[#D4AF37]/30 bg-[#101813] p-6 shadow-xl transition hover:border-[#D4AF37]/70"
               >
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <h2 className="text-xl font-bold">
+                    <h2 className="text-xl font-bold text-[#D4AF37]">
                       {seller.business_name}
                     </h2>
-                    <p className="mt-1 text-sm text-slate-400">
+                    <p className="mt-1 text-sm text-gray-400">
                       Owner: {seller.owner_name}
                     </p>
                   </div>
@@ -197,27 +205,27 @@ export default function AdminSellersPage() {
 
                 <div className="mt-5 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-3">
                   <p>
-                    <span className="text-slate-400">Email:</span>
+                    <span className="text-gray-400">Email:</span>
                     <br />
                     {seller.email}
                   </p>
                   <p>
-                    <span className="text-slate-400">Phone:</span>
+                    <span className="text-gray-400">Phone:</span>
                     <br />
                     {seller.phone}
                   </p>
                   <p>
-                    <span className="text-slate-400">Category:</span>
+                    <span className="text-gray-400">Category:</span>
                     <br />
                     {seller.category}
                   </p>
                   <p>
-                    <span className="text-slate-400">City:</span>
+                    <span className="text-gray-400">City:</span>
                     <br />
                     {seller.city}
                   </p>
                   <p>
-                    <span className="text-slate-400">Applied:</span>
+                    <span className="text-gray-400">Applied:</span>
                     <br />
                     {new Date(seller.created_at).toLocaleDateString()}
                   </p>
@@ -229,7 +237,7 @@ export default function AdminSellersPage() {
                       onClick={() =>
                         updateStatus(seller.user_id, "approved")
                       }
-                      className="rounded-lg bg-emerald-500 px-5 py-2 font-bold text-slate-950 hover:bg-emerald-400"
+                      className="rounded-lg bg-[#D4AF37] px-5 py-2 font-bold text-[#080D0A] transition hover:bg-[#E5C65B]"
                     >
                       Approve Seller
                     </button>
@@ -238,7 +246,7 @@ export default function AdminSellersPage() {
                       onClick={() =>
                         updateStatus(seller.user_id, "rejected")
                       }
-                      className="rounded-lg bg-red-600 px-5 py-2 font-bold text-white hover:bg-red-500"
+                      className="rounded-lg border border-red-500/50 bg-red-600/90 px-5 py-2 font-bold text-white transition hover:bg-red-500"
                     >
                       Reject Seller
                     </button>
@@ -250,10 +258,14 @@ export default function AdminSellersPage() {
         </div>
 
         <div className="mt-8">
-          <a href="/admin" className="text-emerald-400 hover:underline">
+          <a
+            href="/admin"
+            className="font-semibold text-[#D4AF37] transition hover:text-[#F5F5F0] hover:underline"
+          >
             ← Back to Admin Dashboard
           </a>
         </div>
+
       </div>
     </main>
   );
