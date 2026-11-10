@@ -23,6 +23,7 @@ export default function AdminSellersPage() {
 
   async function loadSellers() {
     setLoading(true);
+    setMessage("");
 
     try {
       const response = await fetch("/api/admin/sellers", {
@@ -79,7 +80,7 @@ export default function AdminSellersPage() {
         throw new Error(data.error || "Unable to update seller");
       }
 
-      setMessage(data.message);
+      setMessage(data.message || "Seller status updated successfully.");
       await loadSellers();
     } catch (error) {
       setMessage(
@@ -98,100 +99,152 @@ export default function AdminSellersPage() {
       : sellers.filter((s) => s.status === filter);
 
   const statusStyle = {
-    pending: "bg-amber-500/10 text-amber-400",
-    approved: "bg-emerald-500/10 text-emerald-400",
-    rejected: "bg-red-500/10 text-red-400",
+    pending: "border-[#D4AF37]/40 bg-[#D4AF37]/10 text-[#E8C75A]",
+    approved: "border-emerald-500/30 bg-emerald-500/10 text-emerald-400",
+    rejected: "border-red-500/30 bg-red-500/10 text-red-400",
   };
 
+  const stats = [
+    {
+      label: "Total Sellers",
+      value: sellers.length,
+      color: "text-white",
+    },
+    {
+      label: "Pending",
+      value: pending,
+      color: "text-[#D4AF37]",
+    },
+    {
+      label: "Approved",
+      value: approved,
+      color: "text-emerald-400",
+    },
+    {
+      label: "Rejected",
+      value: rejected,
+      color: "text-red-400",
+    },
+  ];
+
   return (
-    <main className="min-h-screen bg-slate-950 px-5 py-10 text-white">
+    <main className="min-h-screen bg-[#080D0A] px-4 py-8 text-[#F5F5F0] sm:px-6">
       <div className="mx-auto max-w-6xl">
-        <a href="/admin" className="text-3xl font-bold text-emerald-400">
-          ALIQO
+
+        <a
+          href="/admin"
+          className="text-3xl font-extrabold tracking-wide text-[#D4AF37]"
+        >
+          ALIQO<span className="text-white">.</span>
         </a>
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Seller Applications</h1>
-            <p className="mt-2 text-slate-400">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.25em] text-[#D4AF37]">
+              Admin Control Center
+            </p>
+
+            <h1 className="text-3xl font-bold text-white sm:text-4xl">
+              Seller Applications
+            </h1>
+
+            <p className="mt-2 text-sm text-[#A9B6AC]">
               Manage and review seller registration requests.
             </p>
           </div>
 
           <button
             onClick={loadSellers}
-            className="rounded-lg border border-white/20 px-5 py-2 hover:bg-white/10"
+            disabled={loading}
+            className="rounded-lg border border-[#D4AF37]/50 bg-[#123D2B] px-5 py-2.5 font-semibold text-[#E8C75A] transition hover:bg-[#1A5139] disabled:opacity-50"
           >
-            Refresh
+            {loading ? "Refreshing..." : "↻ Refresh"}
           </button>
         </div>
 
         {message && (
-          <div className="mt-6 rounded-lg bg-emerald-500/10 p-4 text-emerald-300">
+          <div className="mt-6 rounded-xl border border-[#D4AF37]/30 bg-[#14251B] p-4 text-sm text-[#E8C75A]">
             {message}
           </div>
         )}
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-4">
-          {[
-            { label: "Total Sellers", value: sellers.length },
-            { label: "Pending", value: pending },
-            { label: "Approved", value: approved },
-            { label: "Rejected", value: rejected },
-          ].map((item) => (
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {stats.map((item) => (
             <div
               key={item.label}
-              className="rounded-xl border border-white/10 bg-slate-900 p-5"
+              className="rounded-2xl border border-[#D4AF37]/25 bg-[#101813] p-5 shadow-lg shadow-black/20 transition hover:border-[#D4AF37]/60"
             >
-              <p className="text-sm text-slate-400">{item.label}</p>
-              <p className="mt-2 text-3xl font-bold">{item.value}</p>
+              <p className="text-sm font-medium text-[#A9B6AC]">
+                {item.label}
+              </p>
+
+              <p className={`mt-3 text-4xl font-extrabold ${item.color}`}>
+                {item.value}
+              </p>
+
+              <div className="mt-4 h-1 w-12 rounded-full bg-[#D4AF37]" />
             </div>
           ))}
         </div>
 
-        <div className="mt-8 flex flex-wrap gap-2">
-          {["all", "pending", "approved", "rejected"].map((item) => (
-            <button
-              key={item}
-              onClick={() => setFilter(item)}
-              className={`rounded-lg px-4 py-2 text-sm font-semibold capitalize ${
-                filter === item
-                  ? "bg-emerald-500 text-slate-950"
-                  : "bg-slate-800 text-white"
-              }`}
-            >
-              {item}
-            </button>
-          ))}
+        <div className="mt-8 rounded-2xl border border-[#D4AF37]/20 bg-[#101813] p-4">
+          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-[#D4AF37]">
+            Filter Applications
+          </p>
+
+          <div className="flex flex-wrap gap-2">
+            {["all", "pending", "approved", "rejected"].map((item) => (
+              <button
+                key={item}
+                onClick={() => setFilter(item)}
+                className={`rounded-lg border px-5 py-2 text-sm font-semibold capitalize transition ${
+                  filter === item
+                    ? "border-[#D4AF37] bg-[#D4AF37] text-[#080D0A]"
+                    : "border-[#D4AF37]/20 bg-[#080D0A] text-[#D5DED6] hover:border-[#D4AF37] hover:text-[#E8C75A]"
+                }`}
+              >
+                {item}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="mt-6 space-y-4">
           {loading ? (
-            <p className="py-10 text-center text-slate-400">
-              Loading seller applications...
-            </p>
+            <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#101813] p-12 text-center">
+              <p className="font-medium text-[#D4AF37]">
+                Loading seller applications...
+              </p>
+            </div>
           ) : visibleSellers.length === 0 ? (
-            <div className="rounded-xl border border-white/10 bg-slate-900 p-10 text-center text-slate-400">
-              No seller applications found.
+            <div className="rounded-2xl border border-[#D4AF37]/20 bg-[#101813] p-12 text-center">
+              <div className="mb-4 text-4xl text-[#D4AF37]">◇</div>
+              <h2 className="text-xl font-bold text-white">
+                No Seller Applications Found
+              </h2>
+              <p className="mt-2 text-sm text-[#A9B6AC]">
+                Applications will appear here when they are successfully loaded.
+              </p>
             </div>
           ) : (
             visibleSellers.map((seller) => (
               <div
                 key={seller.user_id}
-                className="rounded-xl border border-white/10 bg-slate-900 p-6"
+                className="rounded-2xl border border-[#D4AF37]/25 bg-[#101813] p-5 shadow-lg shadow-black/20 transition hover:border-[#D4AF37]/60 sm:p-6"
               >
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <h2 className="text-xl font-bold">
+                    <h2 className="text-xl font-bold text-white">
                       {seller.business_name}
                     </h2>
-                    <p className="mt-1 text-sm text-slate-400">
+
+                    <p className="mt-2 text-sm text-[#A9B6AC]">
                       Owner: {seller.owner_name}
                     </p>
                   </div>
 
                   <span
-                    className={`rounded-full px-3 py-1 text-xs font-bold capitalize ${
+                    className={`rounded-full border px-4 py-1.5 text-xs font-bold capitalize ${
                       statusStyle[seller.status]
                     }`}
                   >
@@ -199,56 +252,66 @@ export default function AdminSellersPage() {
                   </span>
                 </div>
 
-                <div className="mt-5 grid gap-4 text-sm sm:grid-cols-2 lg:grid-cols-3">
+                <div className="mt-6 grid gap-5 border-t border-[#D4AF37]/15 pt-5 text-sm sm:grid-cols-2 lg:grid-cols-3">
                   <p>
-                    <span className="text-slate-400">Email:</span>
+                    <span className="text-[#A9B6AC]">Email</span>
                     <br />
-                    {seller.email}
+                    <span className="mt-1 inline-block break-all text-white">
+                      {seller.email}
+                    </span>
                   </p>
 
                   <p>
-                    <span className="text-slate-400">Phone:</span>
+                    <span className="text-[#A9B6AC]">Phone</span>
                     <br />
-                    {seller.phone}
+                    <span className="mt-1 inline-block text-white">
+                      {seller.phone}
+                    </span>
                   </p>
 
                   <p>
-                    <span className="text-slate-400">Category:</span>
+                    <span className="text-[#A9B6AC]">Category</span>
                     <br />
-                    {seller.category}
+                    <span className="mt-1 inline-block text-white">
+                      {seller.category}
+                    </span>
                   </p>
 
                   <p>
-                    <span className="text-slate-400">City:</span>
+                    <span className="text-[#A9B6AC]">City</span>
                     <br />
-                    {seller.city}
+                    <span className="mt-1 inline-block text-white">
+                      {seller.city}
+                    </span>
                   </p>
 
                   <p>
-                    <span className="text-slate-400">Applied:</span>
+                    <span className="text-[#A9B6AC]">Applied</span>
                     <br />
-                    {new Date(seller.created_at).toLocaleDateString()}
+                    <span className="mt-1 inline-block text-white">
+                      {new Date(seller.created_at).toLocaleDateString()}
+                    </span>
                   </p>
                 </div>
 
                 {seller.status === "pending" && (
-                  <div className="mt-6 flex flex-wrap gap-3">
+                  <div className="mt-6 flex flex-wrap gap-3 border-t border-[#D4AF37]/15 pt-5">
                     <button
                       onClick={() =>
                         updateStatus(seller.user_id, "approved")
                       }
-                      className="rounded-lg bg-emerald-500 px-5 py-2 font-bold text-slate-950 hover:bg-emerald-400"
+                      className="rounded-lg border border-[#D4AF37] bg-[#D4AF37] px-5 py-2.5 font-bold text-[#080D0A] transition hover:bg-[#E8C75A]"
                     >
-                      Approve Seller
+                      ✓ Approve Seller
                     </button>
 
                     <button
                       onClick={() =>
                         updateStatus(seller.user_id, "rejected")
                       }
-                      className="rounded-lg bg-red-600 px-5 py-2 font-bold text-white hover:bg-red-500"
+                      className="rounded-lg border border-red-500/40 bg-red-950/40 px-5 py-2.5 font-bold text-red-300 transition hover:bg-red-900/60"
                     >
-                      Reject Seller
+                      ✕ Reject Seller
                     </button>
                   </div>
                 )}
@@ -257,13 +320,17 @@ export default function AdminSellersPage() {
           )}
         </div>
 
-        <div className="mt-8">
+        <div className="mt-10 border-t border-[#D4AF37]/20 pt-6">
           <a
             href="/admin"
-            className="text-emerald-400 hover:underline"
+            className="font-semibold text-[#D4AF37] transition hover:text-[#F0D477]"
           >
             ← Back to Admin Dashboard
           </a>
+
+          <p className="mt-6 text-center text-xs text-[#718075]">
+            ALIQO — Discover More. Do More.
+          </p>
         </div>
       </div>
     </main>
