@@ -6,11 +6,13 @@ import { useRouter } from "next/navigation";
 
 export default function ResetPasswordPage() {
   const router = useRouter();
+
+  const [accessToken, setAccessToken] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [message, setMessage] = useState("Verifying your recovery link...");
-  const [ready, setReady] = useState(false);
+  const [message, setMessage] = useState("Verifying your reset link...");
   const [loading, setLoading] = useState(false);
+  const [validLink, setValidLink] = useState(false);
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -19,8 +21,8 @@ export default function ResetPasswordPage() {
     async function verifyLink() {
       const hash = window.location.hash.substring(1);
       const params = new URLSearchParams(hash);
-      const accessToken = params.get("access_token");
-      const refreshToken = params.get("refresh_token");
+
+      const token = params.get("access_token");
       const error = params.get("error_description");
 
       if (error) {
@@ -28,49 +30,47 @@ export default function ResetPasswordPage() {
         return;
       }
 
-      if (!supabaseUrl || !supabaseKey || !accessToken) {
-        setMessage("Invalid or expired recovery link. Please request a new one.");
+      if (!token) {
+        setMessage(
+          "Reset link is missing or expired. Please request a new password reset email."
+        );
+        return;
+      }
+
+      if (!supabaseUrl || !supabaseKey) {
+        setMessage("Supabase configuration is missing.");
         return;
       }
 
       try {
-        const response = await fetch(
-          `${supabaseUrl}/auth/v1/user`,
-          {
-            headers: {
-              apikey: supabaseKey,
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
+        const response = await fetch(`${supabaseUrl}/auth/v1/user`, {
+          headers: {
+            apikey: supabaseKey,
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) {
-          throw new Error("Your recovery link is invalid or expired.");
+          setMessage("This reset link is invalid or expired. Request a new one.");
+          return;
         }
 
-        if (refreshToken) {
-          localStorage.setItem("aliqo_recovery_refresh", refreshToken);
-        }
-
-        localStorage.setItem("aliqo_recovery_token", accessToken);
-        setReady(true);
-        setMessage("Choose your new password.");
-      } catch (error) {
-        setMessage(
-          error instanceof Error ? error.message : "Unable to verify link."
-        );
+        setAccessToken(token);
+        setValidLink(true);
+        setMessage("Please enter your new password below.");
+      } catch {
+        setMessage("Unable to verify the reset link. Please try again.");
       }
     }
 
     verifyLink();
   }, [supabaseUrl, supabaseKey]);
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setMessage("");
+  async function handleReset(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
-    if (password.length < 6) {
-      setMessage("Password must be at least 6 characters.");
+    if (password.length < 8) {
+      setMessage("Password must be at least 8 characters long.");
       return;
     }
 
@@ -79,22 +79,16 @@ export default function ResetPasswordPage() {
       return;
     }
 
-    const token = localStorage.getItem("aliqo_recovery_token");
-
-    if (!token || !supabaseUrl || !supabaseKey) {
-      setMessage("Recovery session expired. Please request a new email.");
-      return;
-    }
-
     setLoading(true);
+    setMessage("");
 
     try {
       const response = await fetch(`${supabaseUrl}/auth/v1/user`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          apikey: supabaseKey,
-          Authorization: `Bearer ${token}`,
+          apikey: supabaseKey!,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ password }),
       });
@@ -102,20 +96,22 @@ export default function ResetPasswordPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.msg || data.message || "Password update failed.");
+        throw new Error(data.message || data.msg || "Password update failed.");
       }
 
-      localStorage.removeItem("aliqo_recovery_token");
-      localStorage.removeItem("aliqo_recovery_refresh");
+      setMessage("Password updated successfully! Redirecting to seller login...");
 
-      setMessage("Password updated successfully! You can now login.");
       setPassword("");
       setConfirmPassword("");
 
-      setTimeout(() => router.push("/seller/register"), 2000);
+      setTimeout(() => {
+        router.push("/seller/register");
+      }, 2500);
     } catch (error) {
       setMessage(
-        error instanceof Error ? error.message : "Something went wrong."
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again."
       );
     } finally {
       setLoading(false);
@@ -123,64 +119,67 @@ export default function ResetPasswordPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[#f7f8f2] px-5 py-10">
-      <div className="w-full max-w-md rounded-3xl bg-white p-8 shadow-xl">
-        <a href="/" className="text-3xl font-black text-emerald-900">
-          ALIQO<span className="text-amber-500">.</span>
-        </a>
-
-        <h1 className="mt-8 text-3xl font-black text-emerald-950">
-          Reset Your Password
+    <main className="min-h-screen flex items-center justify-center bg-gray-950 px-4 py-10">
+      <div className="w-full max-w-md rounded-2xl border border-gray-700 bg-gray-900 p-8 shadow-xl">
+        <h1 className="mb-2 text-center text-3xl font-bold text-white">
+          ALIQO
         </h1>
 
-        <p className="mt-3 text-sm text-slate-500">
-          Enter and confirm your new account password.
+        <h2 className="mb-6 text-center text-xl font-semibold text-white">
+          Reset Your Password
+        </h2>
+
+        <p className="mb-5 text-center text-sm text-gray-300">
+          {message}
         </p>
 
-        {message && (
-          <div className="mt-6 rounded-xl bg-emerald-50 p-4 text-sm text-emerald-900">
-            {message}
-          </div>
-        )}
+        {validLink && (
+          <form onSubmit={handleReset} className="space-y-4">
+            <div>
+              <label className="mb-2 block text-sm text-gray-200">
+                New Password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter new password"
+                required
+                minLength={8}
+                autoComplete="new-password"
+                className="w-full rounded-lg border border-gray-600 bg-gray-800 p-3 text-white outline-none focus:border-green-500"
+              />
+            </div>
 
-        {ready && (
-          <form onSubmit={handleSubmit} className="mt-6 space-y-5">
-            <input
-              type="password"
-              required
-              minLength={6}
-              placeholder="New password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-xl border p-4 outline-none focus:border-emerald-700"
-            />
-
-            <input
-              type="password"
-              required
-              minLength={6}
-              placeholder="Confirm new password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full rounded-xl border p-4 outline-none focus:border-emerald-700"
-            />
+            <div>
+              <label className="mb-2 block text-sm text-gray-200">
+                Confirm New Password
+              </label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm new password"
+                required
+                minLength={8}
+                autoComplete="new-password"
+                className="w-full rounded-lg border border-gray-600 bg-gray-800 p-3 text-white outline-none focus:border-green-500"
+              />
+            </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-emerald-900 py-4 font-bold text-white disabled:opacity-50"
+              className="w-full rounded-lg bg-green-600 p-3 font-semibold text-white hover:bg-green-700 disabled:opacity-50"
             >
               {loading ? "Updating..." : "Update Password"}
             </button>
           </form>
         )}
 
-        <a
-          href="/seller/register"
-          className="mt-7 block text-center text-sm font-semibold text-emerald-900"
-        >
-          Back to Seller Login
-        </a>
+        <p className="mt-6 text-center text-xs text-gray-500">
+          ALIQO - Your Smart Discovery Platform
+        </p>
       </div>
     </main>
   );
