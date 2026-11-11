@@ -7,14 +7,26 @@ const partners = [
   {
     name: "Binance",
     description:
-      "Explore the Binance cryptocurrency exchange and its available services.",
+      "Explore Binance, one of the world's leading cryptocurrency exchanges, and discover its digital asset services.",
     website: "https://www.binance.com/",
   },
   {
     name: "Bybit",
     description:
-      "Explore Bybit and learn about its cryptocurrency trading services.",
+      "Discover Bybit and explore its cryptocurrency exchange and digital finance services.",
     website: "https://www.bybit.com/",
+  },
+  {
+    name: "OKX",
+    description:
+      "Explore OKX and learn about its cryptocurrency exchange and digital asset services.",
+    website: "https://www.okx.com/",
+  },
+  {
+    name: "Bitget",
+    description:
+      "Discover Bitget and explore its cryptocurrency exchange and digital asset services.",
+    website: "https://www.bitget.com/",
   },
 ];
 
@@ -23,13 +35,16 @@ export default function CryptoPage() {
     <main className="min-h-screen bg-[#07130f] text-white">
       <header className="border-b border-[#c5a34a]/30 px-6 py-5">
         <div className="mx-auto flex max-w-6xl items-center justify-between">
-          <Link href="/" className="text-2xl font-bold text-[#d6b65c]">
+          <Link
+            href="/"
+            className="text-2xl font-bold tracking-wide text-[#d6b65c]"
+          >
             ALIQO
           </Link>
 
           <Link
             href="/"
-            className="rounded-lg border border-[#d6b65c] px-4 py-2 text-sm hover:bg-[#d6b65c] hover:text-black"
+            className="rounded-lg border border-[#d6b65c] px-4 py-2 text-sm transition hover:bg-[#d6b65c] hover:text-black"
           >
             Back to Home
           </Link>
@@ -47,23 +62,24 @@ export default function CryptoPage() {
         </h1>
 
         <p className="mx-auto max-w-2xl text-base leading-8 text-gray-300">
-          Discover cryptocurrency platforms, explore educational resources,
-          and learn about digital finance. Make informed decisions before
-          using any cryptocurrency service.
+          Discover cryptocurrency platforms, explore educational
+          resources, and learn about digital finance. Compare
+          platforms and make informed decisions before using
+          any cryptocurrency service.
         </p>
       </section>
 
-      <section className="mx-auto grid max-w-5xl gap-6 px-6 pb-16 md:grid-cols-2">
+      <section className="mx-auto grid max-w-5xl gap-6 px-6 pb-16 sm:grid-cols-2">
         {partners.map((partner) => (
           <article
             key={partner.name}
-            className="rounded-2xl border border-[#c5a34a]/30 bg-[#10231a] p-8 shadow-lg"
+            className="rounded-2xl border border-[#c5a34a]/30 bg-[#10231a] p-8 shadow-lg transition duration-300 hover:-translate-y-1 hover:border-[#d6b65c]"
           >
             <h2 className="mb-4 text-2xl font-bold text-[#d6b65c]">
               {partner.name}
             </h2>
 
-            <p className="mb-6 leading-7 text-gray-300">
+            <p className="mb-6 min-h-20 leading-7 text-gray-300">
               {partner.description}
             </p>
 
@@ -88,21 +104,24 @@ export default function CryptoPage() {
           <h2 className="mb-3 text-xl font-bold text-[#d6b65c]">
             Important Risk Disclaimer
           </h2>
+
           <p className="text-sm leading-7 text-gray-300">
-            Cryptocurrency involves significant financial risk. Prices can
-            change rapidly, and you may lose some or all of your investment.
-            ALIQO does not provide investment or financial advice. Always
-            research platforms and understand the risks before making
+            Cryptocurrency involves significant financial risk.
+            Prices can change rapidly, and you may lose some or
+            all of your investment. ALIQO does not provide
+            investment or financial advice. Always research
+            platforms and understand the risks before making
             financial decisions.
           </p>
         </div>
       </section>
 
       <footer className="border-t border-[#c5a34a]/30 px-6 py-8 text-center text-sm text-gray-400">
-       <p>© 2026 ALIQO. All rights reserved.</p>
+        <p>© 2026 ALIQO. All rights reserved.</p>
+
         <p className="mt-2">
-          Some links may become affiliate links in the future. Any such
-          relationship will be disclosed clearly.
+          Some links may become affiliate links in the future.
+          Any such relationship will be disclosed clearly.
         </p>
       </footer>
     </main>
