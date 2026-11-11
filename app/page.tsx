@@ -153,7 +153,7 @@ const cardStyle =
 
 export default function Home() {
   const [query, setQuery] = useState("");
-  
+
   const [language, setLanguage] = useState<"en" | "ur">("en");
   const [mode, setMode] = useState<SearchMode>("web");
 
@@ -339,37 +339,50 @@ export default function Home() {
           </a>
 
           <div className="flex items-center gap-2">
-  <a href="/deals" className="rounded-full border border-[#B9953B]/50 bg-[#D4AF37]/10 px-4 py-2 text-xs font-bold text-[#F0D77F]">
-    Deals
-  </a>
+            <a
+              href="/crypto"
+              className="rounded-full border border-[#B9953B]/50 bg-[#D4AF37]/10 px-4 py-2 text-xs font-bold text-[#F0D77F]"
+            >
+              Crypto
+            </a>
 
-  <a href="/advertisements" className="rounded-full border border-[#B9953B]/50 bg-[#D4AF37]/10 px-4 py-2 text-xs font-bold text-[#F0D77F]">
-    Advertisements
-  </a>
+            <a
+              href="/deals"
+              className="rounded-full border border-[#B9953B]/50 bg-[#D4AF37]/10 px-4 py-2 text-xs font-bold text-[#F0D77F]"
+            >
+              Deals
+            </a>
 
- <button
-  type="button"
-  onClick={() => setLanguage("en")}
-  className={`rounded-full px-3 py-2 text-xs font-bold transition ${
-    language === "en"
-      ? "bg-[#D4AF37] text-[#10271D]"
-      : "text-white hover:bg-white/10"
-  }`}
->
-  EN
-</button>
+            <a
+              href="/advertisements"
+              className="rounded-full border border-[#B9953B]/50 bg-[#D4AF37]/10 px-4 py-2 text-xs font-bold text-[#F0D77F]"
+            >
+              Advertisements
+            </a>
 
-<button
-  type="button"
-  onClick={() => setLanguage("ur")}
-  className={`rounded-full px-3 py-2 text-xs font-bold transition ${
-    language === "ur"
-      ? "bg-[#D4AF37] text-[#10271D]"
-      : "text-white hover:bg-white/10"
-  }`}
->
-  اردو
-</button>
+            <button
+              type="button"
+              onClick={() => setLanguage("en")}
+              className={`rounded-full px-3 py-2 text-xs font-bold transition ${
+                language === "en"
+                  ? "bg-[#D4AF37] text-[#10271D]"
+                  : "text-white hover:bg-white/10"
+              }`}
+            >
+              EN
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setLanguage("ur")}
+              className={`rounded-full px-3 py-2 text-xs font-bold transition ${
+                language === "ur"
+                  ? "bg-[#D4AF37] text-[#10271D]"
+                  : "text-white hover:bg-white/10"
+              }`}
+            >
+              اردو
+            </button>
           </div>
         </div>
       </header>
@@ -737,8 +750,6 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      
-                      
       <section className="border-y border-[#D9E2D8] bg-white px-5 py-20 sm:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="mx-auto mb-14 max-w-2xl text-center">
@@ -826,38 +837,42 @@ export default function Home() {
             </div>
 
             <nav className="flex flex-wrap content-start gap-x-7 gap-y-4 text-sm">
-  <a href="/" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-    {t.home}
-  </a>
+              <a href="/" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+                {t.home}
+              </a>
 
-  <a href="/deals" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-    Deals
-  </a>
+              <a href="/crypto" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+                Crypto
+              </a>
 
-  <a href="/advertisements" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-    Advertisements
-  </a>
+              <a href="/deals" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+                Deals
+              </a>
 
-  <a href="/advertise" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-    Advertise With Us
-  </a>
+              <a href="/advertisements" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+                Advertisements
+              </a>
 
-  <a href="/about" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-    {t.about}
-  </a>
+              <a href="/advertise" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+                Advertise With Us
+              </a>
 
-  <a href="/privacy" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-    {t.privacy}
-  </a>
+              <a href="/about" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+                {t.about}
+              </a>
 
-  <a href="/contact" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-    {t.contact}
-  </a>
+              <a href="/privacy" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+                {t.privacy}
+              </a>
 
-  <a href="/terms" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
-    {t.terms}
-  </a>
-</nav>
+              <a href="/contact" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+                {t.contact}
+              </a>
+
+              <a href="/terms" className="text-[#C4D0C5] transition hover:text-[#E4C35D]">
+                {t.terms}
+              </a>
+            </nav>
           </div>
 
           <div className="flex flex-col items-center justify-between gap-3 pt-7 text-xs text-[#87958A] sm:flex-row">
