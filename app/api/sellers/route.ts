@@ -24,17 +24,15 @@ export async function GET() {
       }
     );
 
-   if (!response.ok) {
+  if (!response.ok) {
   const errorDetails = await response.text();
 
-  console.error(
-    "ALIQO SELLERS API ERROR:",
-    response.status,
-    errorDetails
-  );
-
   return NextResponse.json(
-    { error: "Unable to load approved sellers" },
+    {
+      error: "Supabase request failed",
+      status: response.status,
+      details: errorDetails,
+    },
     { status: 500 }
   );
 }
