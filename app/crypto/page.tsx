@@ -99,7 +99,7 @@ export default function CryptoPage() {
       </section>
 
       <footer className="border-t border-[#c5a34a]/30 px-6 py-8 text-center text-sm text-gray-400">
-        <p>© {new Date().getFullYear()} ALIQO. All rights reserved.</p>
+       <p>© 2026 ALIQO. All rights reserved.</p>
         <p className="mt-2">
           Some links may become affiliate links in the future. Any such
           relationship will be disclosed clearly.
