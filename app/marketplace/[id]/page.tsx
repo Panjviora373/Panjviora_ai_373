@@ -1,4 +1,8 @@
+
+import AddToCartButton from "./AddToCartButton";
+
 export const instant = false;
+
 type Product = {
   id: string;
   product_name: string;
@@ -122,16 +126,10 @@ export default async function ProductDetailsPage({
                   : "Out of stock"}
               </p>
 
-              <button
-                type="button"
-                disabled
-                className="mt-8 cursor-not-allowed rounded-xl bg-[#d6b45c] px-8 py-4 font-bold text-black opacity-70"
-              >
-                Buy Now — Coming Soon
-              </button>
+              <AddToCartButton product={product} />
 
               <p className="mt-3 text-xs text-gray-500">
-                Secure checkout and ordering will be available soon.
+                Your cart is saved in this browser.
               </p>
             </div>
           </div>
