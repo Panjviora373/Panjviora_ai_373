@@ -192,13 +192,12 @@ export default function CartPage() {
                 </span>
               </div>
 
-              <button
-                type="button"
-                disabled
-                className="mt-8 w-full cursor-not-allowed rounded-xl bg-[#d6b45c] px-5 py-4 font-bold text-black opacity-70"
-              >
-                Checkout — Coming Soon
-              </button>
+              <a
+  href="/checkout"
+  className="mt-8 block w-full rounded-xl bg-[#d6b45c] px-5 py-4 text-center font-bold text-black transition hover:bg-[#e6ca7a]"
+>
+  Proceed to Checkout
+</a>
 
               <p className="mt-3 text-center text-xs text-gray-500">
                 Secure checkout will be available soon.
