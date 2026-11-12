@@ -9,7 +9,7 @@ async function verifyAdmin(request: NextRequest) {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const secretKey = process.env.SUPABASE_SECRET_KEY;
 
-  if (!token || !url || !anonKey || !secretKey) return null;
+if (!token || !url || !anonKey) return null;
 
   try {
     const response = await fetch(`${url}/auth/v1/user`, {
@@ -28,7 +28,7 @@ async function verifyAdmin(request: NextRequest) {
       return null;
     }
 
-    return { url, secretKey };
+return { url, secretKey: secretKey || "" };
   } catch {
     return null;
   }
@@ -47,7 +47,12 @@ export async function GET(request: NextRequest) {
       { status: 401 }
     );
   }
-
+if (!admin.secretKey) {
+  return NextResponse.json(
+    { error: "SUPABASE_SECRET_KEY is missing." },
+    { status: 500 }
+  );
+}
   try {
     const response = await fetch(
       `${admin.url}/rest/v1/orders?select=*,order_items(*)&order=created_at.desc`,
