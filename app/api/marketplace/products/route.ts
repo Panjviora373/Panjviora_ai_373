@@ -22,12 +22,18 @@ export async function GET() {
       }
     );
 
-    if (!response.ok) {
-      return Response.json(
-        { error: "Unable to load products" },
-        { status: response.status }
-      );
-    }
+   if (!response.ok) {
+  const errorDetails = await response.text();
+
+  return Response.json(
+    {
+      error: "Unable to load products",
+      status: response.status,
+      details: errorDetails,
+    },
+    { status: response.status }
+  );
+}
 
     const products = await response.json();
 
