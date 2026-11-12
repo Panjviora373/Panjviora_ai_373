@@ -159,7 +159,7 @@ export default function MarketplacePage() {
       </section>
 
       <footer className="border-t border-[#c9a44c]/20 bg-[#08130e] px-6 py-8 text-center text-sm text-gray-500">
-        © {new Date().getFullYear()} ALIQO. All rights reserved.
+       © 2026 ALIQO. All rights reserved.
       </footer>
     </main>
   );
