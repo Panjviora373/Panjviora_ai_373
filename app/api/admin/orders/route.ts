@@ -9,7 +9,9 @@ async function verifyAdmin(request: NextRequest) {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const secretKey = process.env.SUPABASE_SECRET_KEY;
 
-if (!token || !url || !anonKey) return null;
+  if (!token || !url || !anonKey) {
+    return null;
+  }
 
   try {
     const response = await fetch(`${url}/auth/v1/user`, {
@@ -20,7 +22,9 @@ if (!token || !url || !anonKey) return null;
       cache: "no-store",
     });
 
-    if (!response.ok) return null;
+    if (!response.ok) {
+      return null;
+    }
 
     const user = await response.json();
 
@@ -28,7 +32,10 @@ if (!token || !url || !anonKey) return null;
       return null;
     }
 
-return { url, secretKey: secretKey || "" };
+    return {
+      url,
+      secretKey: secretKey || "",
+    };
   } catch {
     return null;
   }
@@ -47,12 +54,14 @@ export async function GET(request: NextRequest) {
       { status: 401 }
     );
   }
-if (!admin.secretKey) {
-  return NextResponse.json(
-    { error: "SUPABASE_SECRET_KEY is missing." },
-    { status: 500 }
-  );
-}
+
+  if (!admin.secretKey) {
+    return NextResponse.json(
+      { error: "SUPABASE_SECRET_KEY is missing." },
+      { status: 500 }
+    );
+  }
+
   try {
     const response = await fetch(
       `${admin.url}/rest/v1/orders?select=*,order_items(*)&order=created_at.desc`,
@@ -67,12 +76,24 @@ if (!admin.secretKey) {
 
     const data = await response.json();
 
-    return NextResponse.json(data, {
-      status: response.status,
-    });
+    if (!response.ok) {
+      return NextResponse.json(
+        {
+          error:
+            data.message ||
+            data.details ||
+            data.hint ||
+            "Supabase database request failed.",
+          code: data.code || null,
+        },
+        { status: response.status }
+      );
+    }
+
+    return NextResponse.json(data);
   } catch {
     return NextResponse.json(
-      { error: "Could not load orders." },
+      { error: "Orders server request failed." },
       { status: 500 }
     );
   }
@@ -92,6 +113,13 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json(
       { error: "Unauthorized" },
       { status: 401 }
+    );
+  }
+
+  if (!admin.secretKey) {
+    return NextResponse.json(
+      { error: "SUPABASE_SECRET_KEY is missing." },
+      { status: 500 }
     );
   }
 
@@ -137,9 +165,17 @@ export async function PATCH(request: NextRequest) {
 
     const data = await response.json();
 
-    return NextResponse.json(data, {
-      status: response.status,
-    });
+    if (!response.ok) {
+      return NextResponse.json(
+        {
+          error: data.message || "Order update failed.",
+          code: data.code || null,
+        },
+        { status: response.status }
+      );
+    }
+
+    return NextResponse.json(data);
   } catch {
     return NextResponse.json(
       { error: "Order update failed." },
