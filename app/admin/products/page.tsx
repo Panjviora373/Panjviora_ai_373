@@ -128,7 +128,7 @@ export default function AdminProductsPage() {
       <div className="max-w-7xl mx-auto">
         <header className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div>
-            <Link href="/admin" className="text-emerald-400 text-sm hover:underline">
+            <Link href="/admin" className="text-amber-400 text-sm hover:underline">
               ← Back to Admin Dashboard
             </Link>
             <h1 className="text-3xl md:text-4xl font-bold mt-3">
@@ -142,7 +142,7 @@ export default function AdminProductsPage() {
           <button
             onClick={loadProducts}
             disabled={loading}
-            className="rounded-xl bg-emerald-500 px-5 py-3 font-semibold text-black hover:bg-emerald-400 disabled:opacity-50"
+            className="rounded-xl bg-amber-500 px-5 py-3 font-semibold text-black hover:bg-amber-400 disabled:opacity-50"
           >
             {loading ? "Loading..." : "↻ Refresh"}
           </button>
@@ -166,7 +166,7 @@ export default function AdminProductsPage() {
               className="rounded-2xl border border-white/10 bg-[#102019] p-5"
             >
               <p className="text-sm text-gray-400">{item.label}</p>
-              <p className="text-3xl font-bold text-emerald-400 mt-2">
+              <p className="text-3xl font-bold text-amber-400 mt-2">
                 {item.value}
               </p>
             </div>
@@ -224,7 +224,7 @@ export default function AdminProductsPage() {
 
                   <div className="p-5">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs text-emerald-400 uppercase tracking-wider">
+                      <span className="text-xs text-amber-400 uppercase tracking-wider">
                         {product.category}
                       </span>
                       <span
@@ -244,7 +244,7 @@ export default function AdminProductsPage() {
                       {product.product_name}
                     </h2>
 
-                    <p className="text-emerald-400 text-lg font-semibold mt-2">
+                    <p className="text-amber-400 text-lg font-semibold mt-2">
                       {money(Number(product.price))}
                     </p>
 
@@ -271,7 +271,7 @@ export default function AdminProductsPage() {
                         <button
                           onClick={() => updateStatus(product.id, "approved")}
                           disabled={updating === product.id}
-                          className="rounded-xl bg-emerald-500 px-3 py-3 font-semibold text-black hover:bg-emerald-400 disabled:opacity-50"
+                          className="rounded-xl bg-amber-500 px-3 py-3 font-semibold text-black hover:bg-amber-400 disabled:opacity-50"
                         >
                           {updating === product.id ? "Please wait..." : "✓ Approve"}
                         </button>
