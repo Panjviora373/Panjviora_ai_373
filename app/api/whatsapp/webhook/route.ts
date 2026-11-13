@@ -4,6 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 // Meta webhook verification
 export async function GET(request: NextRequest) {
+  console.log("[ALIQO WEBHOOK] GET verification request received");
+
   const { searchParams } = new URL(request.url);
 
   const mode = searchParams.get("hub.mode");
@@ -13,21 +15,22 @@ export async function GET(request: NextRequest) {
   const verifyToken = process.env.WHATSAPP_VERIFY_TOKEN;
 
   if (!verifyToken) {
+    console.error("[ALIQO WEBHOOK] WHATSAPP_VERIFY_TOKEN missing");
     return new NextResponse("Webhook configuration missing", {
       status: 500,
     });
   }
 
-  if (
-    mode === "subscribe" &&
-    token === verifyToken &&
-    challenge
-  ) {
+  if (mode === "subscribe" && token === verifyToken && challenge) {
+    console.log("[ALIQO WEBHOOK] GET verification successful");
+
     return new NextResponse(challenge, {
       status: 200,
       headers: { "Content-Type": "text/plain" },
     });
   }
+
+  console.error("[ALIQO WEBHOOK] GET verification failed");
 
   return new NextResponse("Verification failed", {
     status: 403,
@@ -62,9 +65,13 @@ function isValidSignature(
 
 // Receive WhatsApp events
 export async function POST(request: NextRequest) {
+  console.log("[ALIQO WEBHOOK] POST request received");
+
   const appSecret = process.env.META_APP_SECRET;
 
   if (!appSecret) {
+    console.error("[ALIQO WEBHOOK] META_APP_SECRET missing");
+
     return NextResponse.json(
       { error: "Webhook configuration missing" },
       { status: 500 }
@@ -72,10 +79,11 @@ export async function POST(request: NextRequest) {
   }
 
   const rawBody = await request.text();
-
   const signature = request.headers.get("x-hub-signature-256");
 
   if (!isValidSignature(rawBody, signature, appSecret)) {
+    console.error("[ALIQO WEBHOOK] Signature verification failed");
+
     return NextResponse.json(
       { error: "Invalid signature" },
       { status: 401 }
@@ -87,14 +95,15 @@ export async function POST(request: NextRequest) {
   try {
     body = JSON.parse(rawBody);
   } catch {
+    console.error("[ALIQO WEBHOOK] Invalid JSON received");
+
     return NextResponse.json(
       { error: "Invalid JSON" },
       { status: 400 }
     );
   }
 
-  // WhatsApp events will be processed in the next integration step.
-  console.log("ALIQO WhatsApp webhook event received");
+  console.log("[ALIQO WEBHOOK] Event received and signature verified");
 
   return NextResponse.json({ received: true }, { status: 200 });
 }
