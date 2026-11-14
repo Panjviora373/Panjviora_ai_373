@@ -1,6 +1,7 @@
 
 import Link from "next/link";
-import { connection } from "next/server";
+
+export const dynamic = "force-dynamic";
 
 type Deal = {
   id: number;
@@ -84,15 +85,12 @@ const categories = [
     icon: "✨",
   },
 ];
-export const instant = false;
-export default async function DealsPage() {
-  await connection();
 
+export default async function DealsPage() {
   const deals = await getApprovedDeals();
 
   return (
     <main className="min-h-screen bg-[#F3F6F1] text-[#18271D]">
-      {/* Navigation */}
       <nav className="sticky top-0 z-30 border-b border-[#D7E0D5] bg-[#10271D]/95 px-5 py-5 text-white shadow-lg backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between">
           <Link href="/" className="text-2xl font-black tracking-tight">
@@ -117,7 +115,6 @@ export default async function DealsPage() {
         </div>
       </nav>
 
-      {/* Hero */}
       <section className="relative overflow-hidden px-5 py-24 text-center sm:py-32">
         <div className="pointer-events-none absolute left-1/2 top-0 -z-0 h-[400px] w-[800px] -translate-x-1/2 rounded-full bg-gradient-to-r from-[#D4AF37]/20 via-[#B5C9A9]/30 to-[#173B2B]/15 blur-[100px]" />
 
@@ -147,7 +144,6 @@ export default async function DealsPage() {
         </div>
       </section>
 
-      {/* Categories */}
       <section className="mx-auto max-w-6xl px-5 py-16">
         <div className="mb-10">
           <span className="text-xs font-bold tracking-[0.2em] text-[#A17C26]">
@@ -185,7 +181,6 @@ export default async function DealsPage() {
         </div>
       </section>
 
-      {/* Featured Deals */}
       <section className="border-y border-[#D9E2D8] bg-white px-5 py-20">
         <div className="mx-auto max-w-6xl">
           <div className="mb-10">
@@ -257,7 +252,6 @@ export default async function DealsPage() {
         </div>
       </section>
 
-      {/* Business Promotion */}
       <section className="mx-auto max-w-5xl px-5 py-20">
         <div className="rounded-[2rem] bg-[#10271D] p-9 text-center text-white shadow-xl sm:p-14">
           <span className="text-xs font-bold tracking-[0.25em] text-[#E4C35D]">
@@ -282,7 +276,6 @@ export default async function DealsPage() {
         </div>
       </section>
 
-      {/* Footer */}
       <footer className="border-t border-[#D9E2D8] bg-[#10271D] px-5 py-10 text-center text-sm text-[#C4D0C5]">
         <Link href="/" className="text-2xl font-black text-white">
           ALI<span className="text-[#E4C35D]">QO</span>
