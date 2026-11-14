@@ -13,10 +13,19 @@ type Product = {
   stock_quantity: number;
 };
 
+type CartItem = {
+  product_id: string;
+  product_name: string;
+  price: number;
+  quantity: number;
+  image_url: string | null;
+};
+
 export default function MarketplacePage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     async function loadProducts() {
@@ -48,6 +57,49 @@ export default function MarketplacePage() {
       maximumFractionDigits: 0,
     }).format(price);
 
+  function addToCart(product: Product) {
+    try {
+      if (product.stock_quantity <= 0) {
+        setMessage("Sorry, this product is out of stock.");
+        return;
+      }
+
+      const savedCart = localStorage.getItem("aliqo_cart");
+      const cart: CartItem[] = savedCart ? JSON.parse(savedCart) : [];
+
+      if (!Array.isArray(cart)) {
+        throw new Error("Invalid cart data");
+      }
+
+      const existingIndex = cart.findIndex(
+        (item) => item.product_id === product.id
+      );
+
+      if (existingIndex !== -1) {
+        if (cart[existingIndex].quantity >= product.stock_quantity) {
+          setMessage("You cannot add more than the available stock.");
+          return;
+        }
+
+        cart[existingIndex].quantity += 1;
+      } else {
+        cart.push({
+          product_id: product.id,
+          product_name: product.product_name,
+          price: Number(product.price),
+          quantity: 1,
+          image_url: product.image_url,
+        });
+      }
+
+      localStorage.setItem("aliqo_cart", JSON.stringify(cart));
+
+      setMessage(`${product.product_name} added to your cart!`);
+    } catch {
+      setMessage("Unable to add product. Please try again.");
+    }
+  }
+
   return (
     <main className="min-h-screen bg-[#050907] text-white">
       <header className="border-b border-[#c9a44c]/30 bg-[#08130e]">
@@ -59,12 +111,21 @@ export default function MarketplacePage() {
             ALIQO
           </a>
 
-          <a
-            href="/"
-            className="rounded-full border border-[#d6b45c]/60 px-5 py-2 text-sm text-[#e6ca7a] transition hover:bg-[#d6b45c] hover:text-black"
-          >
-            Back to Home
-          </a>
+          <div className="flex items-center gap-3">
+            <a
+              href="/cart"
+              className="rounded-full border border-[#d6b45c] px-5 py-2 text-sm text-[#e6ca7a] hover:bg-[#d6b45c] hover:text-black"
+            >
+              Shopping Cart
+            </a>
+
+            <a
+              href="/"
+              className="rounded-full border border-[#d6b45c]/60 px-5 py-2 text-sm text-[#e6ca7a] transition hover:bg-[#d6b45c] hover:text-black"
+            >
+              Back to Home
+            </a>
+          </div>
         </div>
       </header>
 
@@ -82,6 +143,15 @@ export default function MarketplacePage() {
             Explore products from ALIQO sellers, all in one place.
           </p>
         </div>
+
+        {message && (
+          <div
+            role="status"
+            className="mb-8 rounded-xl border border-[#d6b45c]/40 bg-[#0b1711] p-4 text-center text-[#e6ca7a]"
+          >
+            {message}
+          </div>
+        )}
 
         {loading && (
           <p className="py-16 text-center text-[#d6b45c]">
@@ -151,6 +221,17 @@ export default function MarketplacePage() {
                         : "Out of stock"}
                     </span>
                   </div>
+
+                  <button
+                    type="button"
+                    onClick={() => addToCart(product)}
+                    disabled={product.stock_quantity <= 0}
+                    className="mt-5 w-full rounded-xl bg-[#d6b45c] px-5 py-3 font-bold text-black transition hover:bg-[#e6ca7a] disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    {product.stock_quantity > 0
+                      ? "Add to Cart"
+                      : "Out of Stock"}
+                  </button>
                 </div>
               </article>
             ))}
@@ -159,7 +240,7 @@ export default function MarketplacePage() {
       </section>
 
       <footer className="border-t border-[#c9a44c]/20 bg-[#08130e] px-6 py-8 text-center text-sm text-gray-500">
-       © 2026 ALIQO. All rights reserved.
+        © 2026 ALIQO. All rights reserved.
       </footer>
     </main>
   );
