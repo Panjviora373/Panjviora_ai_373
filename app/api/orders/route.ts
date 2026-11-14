@@ -6,8 +6,12 @@ const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function POST(request: Request) {
+  let stage = "request_start";
+
   try {
-    // Identify client IP
+    // 1. Rate limit
+    stage = "rate_limit";
+
     const forwardedFor = request.headers.get("x-forwarded-for");
     const ip =
       request.headers.get("x-real-ip") ||
@@ -20,7 +24,6 @@ export async function POST(request: Request) {
       );
     }
 
-    // Checkout rate limiting: 5 attempts per 10 minutes
     const rateLimit = await checkCheckoutLimit(ip);
 
     if (!rateLimit.allowed) {
@@ -35,14 +38,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate request body
+    // 2. Read request
+    stage = "read_request";
+
     const body = await request.json();
 
-    if (
-      !body ||
-      typeof body !== "object" ||
-      Array.isArray(body)
-    ) {
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
       return NextResponse.json(
         { error: "Invalid request body." },
         { status: 400 }
@@ -66,7 +67,6 @@ export async function POST(request: Request) {
 
     const items = body.items;
 
-    // Match database validation
     if (
       !customerName ||
       customerName.length > 120 ||
@@ -92,14 +92,16 @@ export async function POST(request: Request) {
       );
     }
 
-    const validItems = [];
+    // 3. Validate cart
+    stage = "validate_cart";
+
+    const validItems: {
+      product_id: string;
+      quantity: number;
+    }[] = [];
 
     for (const item of items) {
-      if (
-        !item ||
-        typeof item !== "object" ||
-        Array.isArray(item)
-      ) {
+      if (!item || typeof item !== "object" || Array.isArray(item)) {
         return NextResponse.json(
           { error: "Invalid cart item." },
           { status: 400 }
@@ -125,17 +127,24 @@ export async function POST(request: Request) {
       });
     }
 
+    // 4. Check Supabase configuration
+    stage = "check_environment";
+
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const secretKey = process.env.SUPABASE_SECRET_KEY;
 
     if (!supabaseUrl || !secretKey) {
+      console.error("[orders] Missing Supabase environment configuration.");
+
       return NextResponse.json(
         { error: "Order service is not configured." },
         { status: 500 }
       );
     }
 
-    // Create order through protected database function
+    // 5. Call database function
+    stage = "supabase_rpc";
+
     const response = await fetch(
       `${supabaseUrl.replace(/\/+$/, "")}/rest/v1/rpc/create_guest_order`,
       {
@@ -156,21 +165,42 @@ export async function POST(request: Request) {
     );
 
     if (!response.ok) {
+      const errorText = await response.text();
+
+      console.error("[orders] Supabase RPC failed:", {
+        status: response.status,
+        response: errorText.slice(0, 1000),
+      });
+
       return NextResponse.json(
-        {
-          error:
-            "We could not place your order. Please check your cart and try again.",
-        },
-        { status: 400 }
+        { error: "We could not place your order. Please try again." },
+        { status: 502 }
       );
     }
 
-    const orderId: unknown = await response.json();
+    // 6. Verify database response
+    stage = "verify_rpc_response";
 
-    if (
-      typeof orderId !== "string" ||
-      !UUID_REGEX.test(orderId)
-    ) {
+    const responseText = await response.text();
+
+    let orderId: unknown;
+
+    try {
+      orderId = JSON.parse(responseText);
+    } catch {
+      console.error("[orders] Supabase returned invalid JSON:", {
+        response: responseText.slice(0, 300),
+      });
+
+      return NextResponse.json(
+        { error: "Order confirmation could not be verified." },
+        { status: 502 }
+      );
+    }
+
+    if (typeof orderId !== "string" || !UUID_REGEX.test(orderId)) {
+      console.error("[orders] Supabase returned an invalid order ID.");
+
       return NextResponse.json(
         { error: "Order confirmation could not be verified." },
         { status: 502 }
@@ -185,7 +215,19 @@ export async function POST(request: Request) {
       },
       { status: 201 }
     );
-  } catch {
+  } catch (error: unknown) {
+    console.error("[orders] Request failed:", {
+      stage,
+      error:
+        error instanceof Error
+          ? error.message
+          : String(error),
+      stack:
+        error instanceof Error
+          ? error.stack
+          : undefined,
+    });
+
     return NextResponse.json(
       { error: "Something went wrong. Please try again." },
       { status: 503 }
