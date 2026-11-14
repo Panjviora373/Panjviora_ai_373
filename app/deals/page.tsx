@@ -1,6 +1,7 @@
 
 import Link from "next/link";
 import { connection } from "next/server";
+export const instant = false;
 
 type Deal = {
   id: number;
