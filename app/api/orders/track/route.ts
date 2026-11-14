@@ -1,72 +1,13 @@
 
-import { createHash } from "crypto";
 import { NextResponse } from "next/server";
+import { checkOrderTrackingLimit } from "@/lib/rate-limit";
 
 const UUID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-async function checkRateLimit(ip: string) {
-  const redisUrl = process.env.UPSTASH_REDIS_REST_URL;
-  const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN;
-
-  if (!redisUrl || !redisToken) {
-    throw new Error("Rate limit service not configured");
-  }
-
-  const ipHash = createHash("sha256")
-    .update(ip)
-    .digest("hex");
-
-  const key = `aliqo:order-track:${ipHash}`;
-
-  const script = `
-    local current = redis.call("INCR", KEYS[1])
-    if current == 1 then
-      redis.call("EXPIRE", KEYS[1], ARGV[1])
-    end
-    return current
-  `;
-
-  const response = await fetch(
-    `${redisUrl.replace(/\/+$/, "")}/`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${redisToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify([
-        "EVAL",
-        script,
-        1,
-        key,
-        600,
-      ]),
-      cache: "no-store",
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error("Rate limit service unavailable");
-  }
-
-  const data = await response.json();
-
-  if (
-    data.error ||
-    !Number.isInteger(Number(data.result))
-  ) {
-    throw new Error("Rate limit check failed");
-  }
-
-  return Number(data.result);
-}
-
 export async function POST(request: Request) {
   try {
-    const forwardedFor =
-      request.headers.get("x-forwarded-for");
-
+    const forwardedFor = request.headers.get("x-forwarded-for");
     const ip =
       request.headers.get("x-real-ip") ||
       forwardedFor?.split(",")[0]?.trim();
@@ -78,9 +19,9 @@ export async function POST(request: Request) {
       );
     }
 
-    const attempts = await checkRateLimit(ip);
+    const rateLimit = await checkOrderTrackingLimit(ip);
 
-    if (attempts > 5) {
+    if (!rateLimit.allowed) {
       return NextResponse.json(
         {
           error: "Too many tracking attempts. Please try again later.",
@@ -88,7 +29,7 @@ export async function POST(request: Request) {
         {
           status: 429,
           headers: {
-            "Retry-After": "600",
+            "Retry-After": String(rateLimit.retryAfter ?? 600),
           },
         }
       );
@@ -96,7 +37,7 @@ export async function POST(request: Request) {
 
     const body = await request.json();
 
-    if (!body || typeof body !== "object") {
+    if (!body || typeof body !== "object" || Array.isArray(body)) {
       return NextResponse.json(
         { error: "Invalid request." },
         { status: 400 }
@@ -126,11 +67,8 @@ export async function POST(request: Request) {
       );
     }
 
-    const supabaseUrl =
-      process.env.NEXT_PUBLIC_SUPABASE_URL;
-
-    const secretKey =
-      process.env.SUPABASE_SECRET_KEY;
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const secretKey = process.env.SUPABASE_SECRET_KEY;
 
     if (!supabaseUrl || !secretKey) {
       return NextResponse.json(
