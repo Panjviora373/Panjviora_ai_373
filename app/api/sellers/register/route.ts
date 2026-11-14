@@ -162,7 +162,7 @@ export async function POST(request: NextRequest) {
         body: JSON.stringify({
           user_id: user.id,
           business_name: businessName,
-          ownername: ownerName,
+         owner_name: ownerName,
           email: user.email,
           phone,
           category,
