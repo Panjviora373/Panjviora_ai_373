@@ -212,19 +212,6 @@ export default function AdminPage() {
     }
   }
 
-  function getWhatsAppLink(phone?: string) {
-    const digits = (phone || "").replace(/\D/g, "");
-    if (!digits) return "#";
-
-    const number = digits.startsWith("0")
-      ? `92${digits.slice(1)}`
-      : digits.startsWith("92")
-        ? digits
-        : `92${digits}`;
-
-    return `https://wa.me/${number}`;
-  }
-
   function statusStyle(status?: string) {
     const value = normalizeStatus(status);
 
@@ -516,15 +503,6 @@ export default function AdminPage() {
                         >
                           Reject
                         </button>
-
-                        <a
-                          href={getWhatsAppLink(item.phone)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="rounded-lg bg-[#123D2B] px-4 py-2 font-semibold text-[#F5F5F0] transition hover:bg-[#1B563D]"
-                        >
-                          Contact on WhatsApp
-                        </a>
 
                         <button
                           onClick={() => deleteRequest(item)}
