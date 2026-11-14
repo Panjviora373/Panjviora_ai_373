@@ -10,31 +10,18 @@ export default function AdvertisePage() {
   const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-
-  const contactMessage = `ALIQO Business Advertising Request
-
-Business Name: ${business}
-Contact Person: ${name}
-Email: ${email}
-Phone: ${phone}
-Advertising Details: ${message}`;
-
-  const whatsappLink = `https://wa.me/923363465838?text=${encodeURIComponent(contactMessage)}`;
-
-  const emailLink = `https://mail.google.com/mail/?view=cm&fs=1&to=aliqo37311011@gmail.com&su=${encodeURIComponent(
-    "ALIQO Advertising Request"
-  )}&body=${encodeURIComponent(contactMessage)}`;
+  const [success, setSuccess] = useState("");
 
   const inputStyle =
     "w-full rounded-xl border border-emerald-100 bg-white p-4 text-slate-800 placeholder:text-slate-400 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100";
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
     if (loading) return;
 
     setLoading(true);
-
-    const whatsappWindow = window.open("about:blank", "_blank");
+    setSuccess("");
 
     try {
       const response = await fetch(
@@ -61,11 +48,9 @@ Advertising Details: ${message}`;
         throw new Error(await response.text());
       }
 
-      if (whatsappWindow) {
-        whatsappWindow.location.href = whatsappLink;
-      } else {
-        alert("Request saved successfully. Please contact ALIQO through WhatsApp.");
-      }
+      setSuccess(
+        "Your advertising request has been submitted successfully. Our team will contact you by email."
+      );
 
       setBusiness("");
       setName("");
@@ -73,7 +58,6 @@ Advertising Details: ${message}`;
       setPhone("");
       setMessage("");
     } catch (error) {
-      whatsappWindow?.close();
       alert(
         error instanceof Error
           ? error.message
@@ -173,17 +157,8 @@ Advertising Details: ${message}`;
               </h3>
 
               <a
-                href="https://wa.me/923363465838"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 block font-semibold text-emerald-700 hover:text-emerald-900"
-              >
-                WhatsApp: +92 336 3465838
-              </a>
-
-              <a
                 href="mailto:aliqo37311011@gmail.com"
-                className="mt-3 block break-all font-semibold text-emerald-700 hover:text-emerald-900"
+                className="mt-4 block break-all font-semibold text-emerald-700 hover:text-emerald-900"
               >
                 aliqo37311011@gmail.com
               </a>
@@ -207,6 +182,15 @@ Advertising Details: ${message}`;
                 suitable advertising options with you.
               </p>
             </div>
+
+            {success && (
+              <div
+                role="status"
+                className="mb-6 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold leading-6 text-emerald-800"
+              >
+                {success}
+              </div>
+            )}
 
             <form className="space-y-5" onSubmit={handleSubmit}>
               <input
@@ -262,17 +246,8 @@ Advertising Details: ${message}`;
                 disabled={loading}
                 className="w-full rounded-xl bg-emerald-900 px-5 py-4 font-bold text-white shadow-md transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {loading ? "Sending Request..." : "Send Request on WhatsApp"}
+                {loading ? "Submitting Request..." : "Submit Advertising Request"}
               </button>
-
-              <a
-                href={emailLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block w-full rounded-xl border-2 border-[#D4AF37] bg-[#D4AF37]/10 px-5 py-4 text-center font-bold text-emerald-950 transition hover:bg-[#D4AF37]/25"
-              >
-                Send Request by Gmail
-              </a>
             </form>
 
             <p className="mt-5 text-center text-xs leading-6 text-slate-500">
