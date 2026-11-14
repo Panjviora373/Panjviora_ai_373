@@ -1,7 +1,6 @@
 
 import Link from "next/link";
-
-export const dynamic = "force-dynamic";
+import { connection } from "next/server";
 
 type Deal = {
   id: number;
@@ -87,6 +86,8 @@ const categories = [
 ];
 
 export default async function DealsPage() {
+  await connection();
+
   const deals = await getApprovedDeals();
 
   return (
