@@ -200,20 +200,6 @@ export default function AdminOrdersPage() {
     (order) => order.status === "delivered"
   ).length;
 
-  function getWhatsAppLink(phone: string) {
-    const digits = (phone || "").replace(/\D/g, "");
-
-    if (!digits) return "#";
-
-    const number = digits.startsWith("0")
-      ? `92${digits.slice(1)}`
-      : digits.startsWith("92")
-        ? digits
-        : `92${digits}`;
-
-    return `https://wa.me/${number}`;
-  }
-
   return (
     <main className="min-h-screen bg-[#080D0A] px-4 py-10 text-[#F5F5F0] sm:px-6">
       <div className="mx-auto max-w-6xl">
@@ -437,15 +423,6 @@ export default function AdminOrdersPage() {
                       ? "Updating..."
                       : "Update Status"}
                   </button>
-
-                  <a
-                    href={getWhatsAppLink(order.customer_phone)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-lg border border-[#D4AF37]/40 bg-[#123D2B] px-4 py-3 font-semibold text-white hover:bg-[#1B563D]"
-                  >
-                    Contact on WhatsApp
-                  </a>
                 </div>
               </article>
             ))}
