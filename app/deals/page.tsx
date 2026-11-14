@@ -84,7 +84,7 @@ const categories = [
     icon: "✨",
   },
 ];
-
+export const instant = false;
 export default async function DealsPage() {
   await connection();
 
